@@ -8,7 +8,6 @@ while True:
 	currentInput = ser.readline();
 	print currentInput;
 	dataLog.write(currentInput);
-	
-	
-	//just to see if git edits can be done online. 
-	//ae rajai lai bari lai
+
+#what is life if full of care
+#no time to stand and stare
