@@ -37,23 +37,32 @@ int start_time = millis();
 
 void loop() {
   current_time = millis() - start_time;
+  Serial.println(millis());
+  Serial.println(current_time);
   
   //to open the odor valve for a given amount of time
-  if(current_time >= pre_odor_duration && current_time - pre_odor_duration < odor_duration){
+  if(current_time >= pre_odor_duration && ((current_time - pre_odor_duration) < odor_duration)){
   digitalWrite(odorValve, HIGH);
+  Serial.println("Odor valve turned ON");
   }
   else{
-  digitalWrite(odorValve, LOW);
+  digitalWrite(odorValve, LOW);  
   }
   
   //to enable water delivery during reward period
   reward_start_time = pre_odor_duration + odor_duration + trace_duration;
-  if(current_time > reward_start_time && current_time - reward_start_time  < reward_duration){
+  Serial.println("Some fixed values:");
+  Serial.println(pre_odor_duration);
+  Serial.println(odor_duration);
+  Serial.println(trace_duration);
+  Serial.println(reward_start_time);
+  if(current_time > reward_start_time && ((current_time - reward_start_time)  <= reward_duration)){
     waterAvailability = true;
-    Serial.println("Water is on now....waaaaaa");
+    Serial.println("Water is available now....waaa");
   }
   else{
     waterAvailability = false;
+    Serial.println("Water is not available....    :(");
   } 
 
   lickState = digitalRead(lickSensor);
@@ -78,7 +87,7 @@ void loop() {
   }
   
   //to decide whether or not to give a water reward
-  if (waterAvailability == true && lickCount % licks_per_reward == 0 && lickCount != last_rewarded_lick){
+  if (waterAvailability == true && ((lickCount % licks_per_reward) == 0) && lickCount != last_rewarded_lick){
     digitalWrite(waterValve, HIGH);
     delay(30);
 	digitalWrite(waterValve, LOW);
@@ -90,4 +99,6 @@ void loop() {
 	Serial.print("            REWARD # ");
     Serial.println(rewardCount);
 	}
+  Serial.println("");
+  Serial.println("");
 }
