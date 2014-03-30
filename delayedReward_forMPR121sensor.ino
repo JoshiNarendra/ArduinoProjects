@@ -10,12 +10,12 @@ boolean touchStates[12]; //to keep track of the previous touch states
 int odorValve = 24;
 int waterValve =  36;
 
+int pre_odor_duration = 5000;
 int odor_duration = 5000;
-int pre_odor_duration = 30000;
-int trace_duration = 20000;
-int reward_duration = 20000;
-int post_reward_duration = 10000;
-int licks_per_reward = 5;
+int trace_duration = 5000;
+int reward_duration = 5000;
+int post_reward_duration = 5000;
+int licks_per_reward = 3;
 
 int current_time = 0;
 int reward_start_time = 0;
@@ -26,6 +26,10 @@ int rewardCount = 0;
 int last_rewarded_lick = 0;
 int timeStamp = 0;
 bool waterAvailability = false;
+
+bool runTrial = false;
+bool same_as_last_loop = false;
+char secretSignal = 's';
 
 void setup() {
   Serial.begin(9600);
@@ -43,59 +47,111 @@ void setup() {
 }
 
 //to keep track of various time points in the experiment
-int start_time = millis();
-
+int total_recording_time = pre_odor_duration + odor_duration + trace_duration + reward_duration + post_reward_duration;
 
 void loop() {
-  current_time = millis() - start_time;
   
-  //to open the odor valve for a given amount of time
-  if(current_time >= pre_odor_duration && current_time - pre_odor_duration < odor_duration){
-  digitalWrite(odorValve, HIGH);
-  }
-  else{
-  digitalWrite(odorValve, LOW);
+  if(runTrial == false && same_as_last_loop == false){
+    Serial.print("Enter 1 to start recording:     ");
+    same_as_last_loop = true;
   }
   
-  //to enable water delivery during reward period
-  reward_start_time = pre_odor_duration + odor_duration + trace_duration;
-  if(current_time > reward_start_time && current_time - reward_start_time  < reward_duration){
-    waterAvailability = true;
-  }
-  else{
-    waterAvailability = false;
-  } 
-
-  lickState = readTouchInputs();
+  if (Serial.available()>0){
+      secretSignal = Serial.read();
+      Serial.println(secretSignal);
+      
+      if(secretSignal == 49){  // 49 is the ASCII code for the digit 1
+        runTrial = true;
+        same_as_last_loop = false;
+        Serial.println("Trial starting now.");
+      }
+      else{
+        runTrial = false;
+        Serial.print("Enter 1 to start recording:     ");
+      }
+    }
   
-  //this if statement is to keep track of licking
-  if (lickState == HIGH && lastLickState == LOW) {
-    lickCount =lickCount + 1;
-    timeStamp = millis()/1000;
-    Serial.print(timeStamp);
-    Serial.print("  Lick # ");
-    Serial.println(lickCount);   
+  int start_time = millis();
+  
+  while(runTrial == true){ 
+    current_time = millis() - start_time;
+    timeStamp = current_time/1000;
+    //to open the odor valve for a given amount of time
     
-    lastLickState = lickState;
-  }
+    
+    if(current_time == pre_odor_duration){
+      digitalWrite(odorValve, HIGH);
+      Serial.print(timeStamp);
+      Serial.println("     Odor turned ON.");    
+    }
+    else if(current_time >= pre_odor_duration && current_time - pre_odor_duration < odor_duration){
+      digitalWrite(odorValve, HIGH);
+    }
+    else if(current_time == pre_odor_duration + odor_duration){
+      digitalWrite(odorValve, LOW);
+      Serial.print(timeStamp);
+      Serial.println("     Odor turned OFF.");
+    }    
+    else{
+      digitalWrite(odorValve, LOW);    
+    }
+    
+    //to enable water delivery during reward period
+    reward_start_time = pre_odor_duration + odor_duration + trace_duration;
+    if(current_time == reward_start_time){ 
+      waterAvailability = true;
+      Serial.print(timeStamp);
+      Serial.println("     Water turned ON.");
+    }
+    else if(current_time >= reward_start_time && current_time - reward_start_time  < reward_duration){
+      waterAvailability = true;
+    }
+    else if(current_time == reward_start_time + reward_duration){
+      waterAvailability = false;
+      Serial.print(timeStamp);
+      Serial.println("     Water turned OFF.");      
+    }
+    else{
+      waterAvailability = false;
+    } 
   
-  else {
-    lastLickState = lickState;
+    lickState = readTouchInputs();
+    
+    //this if statement is to keep track of licking
+    if (lickState == HIGH && lastLickState == LOW) {
+      lickCount =lickCount + 1;
+      Serial.print(timeStamp);
+      Serial.print("  Lick # ");
+      Serial.println(lickCount);   
+      
+      lastLickState = lickState;
+    }
+    
+    else {
+      lastLickState = lickState;
+    }
+    
+    //to decide whether or not to give a water reward
+    if (waterAvailability == true && lickCount % licks_per_reward == 0 && lickCount != last_rewarded_lick){
+      digitalWrite(waterValve, HIGH);
+      delay(30);
+      digitalWrite(waterValve, LOW);
+      last_rewarded_lick = lickCount;
+      rewardCount = rewardCount + 1;
+      Serial.print(timeStamp);
+      Serial.print("            REWARD # ");
+      Serial.println(rewardCount);
+    }
+  	
+    //this if statement terminates the data recording session
+    if (current_time > total_recording_time){
+      String goodbye = "I am done. Goodbye Arduino !"; 
+      Serial.println(goodbye);
+      runTrial = false; //this will stop the while loop
+    }
   }
-  
-  //to decide whether or not to give a water reward
-  if (waterAvailability == true && lickCount % licks_per_reward == 0 && lickCount != last_rewarded_lick){
-    digitalWrite(waterValve, HIGH);
-    delay(30);
-	digitalWrite(waterValve, LOW);
-	last_rewarded_lick = lickCount;
-	rewardCount = rewardCount + 1;
-	
-	timeStamp = millis()/1000;
-    Serial.print(timeStamp);
-	Serial.print("            REWARD # ");
-    Serial.println(rewardCount);
-	}
+  lickCount = 0;
+  rewardCount = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
