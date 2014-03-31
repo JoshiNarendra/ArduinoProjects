@@ -253,3 +253,11 @@ void set_register(int address, unsigned char r, unsigned char v){
 
 
 
+
+
+
+
+//checking mac connection
+
+
+
