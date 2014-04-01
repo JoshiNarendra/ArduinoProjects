@@ -4,11 +4,10 @@
 #define TOU_THRESH	0x06
 #define	REL_THRESH	0x0A
 
-int lickSensor = 13;  // Digital pin 13 for touchSensor input
-boolean touchStates[12]; //to keep track of the previous touch states
-
 int odorValve = 24;
 int waterValve =  36;
+int lickSensor = 13;  // Digital pin 13 for touchSensor input
+boolean touchStates[12]; //to keep track of the previous touch states
 
 int pre_odor_duration = 5000;
 int odor_duration = 5000;
