@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import serial;
-
+					
 dataLog = open("rotaryEncoderLog.txt", "a+");
 ser = serial.Serial('/dev/ttyACM0',9600);
 
@@ -11,4 +11,6 @@ while True:
 
 #what is life if full of care
 #no time to stand and stare
-#testing vim from mac,check
+
+#testing123
+#lets say this code is a heap of unintelligible and non-functional bits of text
