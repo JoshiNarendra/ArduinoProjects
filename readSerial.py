@@ -11,4 +11,4 @@ while True:
 
 #what is life if full of care
 #no time to stand and stare
-
+#Go, use Vim they said. It will be fun they said.
