@@ -55,10 +55,12 @@ void setup() {
   digitalWrite(odor_F, LOW);
   digitalWrite(mineral_oil, LOW);
   digitalWrite(arduino_to_scope, LOW);
-  digitalWrite(scope_to_arduino, LOW);  
+  digitalWrite(scope_to_arduino, LOW); 
 
   prepare_lickport(); 
 }
+
+int first_loop = 0;
 
 bool lick = false;
 bool lick_sensor = false; // lickStatus is 1 when lick occurs and 0 otherwise
@@ -84,17 +86,10 @@ int lick_rate = 0;
 int lick_count_at_last_second = 0;
 int last_open_valve = 0;
 
-int runCode = 0;
-int first_loop = 0;
-int recordingDuration = 10; //(recording duration in seconds)
-
-float sensorValue = 0.0;
+//variables for keeping track of distance recorded by rotary encoder
 float lastSensorValue = 0.0;
-float change = 0.0;  //amount of change in rotary encoder value during one completion of while loop
-float rotation_step = 0.0;
 float distance = 0.0;
 float totalDistance = 0.0;
-
 
 //assuming that the virtual track is 5000 mm long
 //these are the points along the track where the odors turn ON/OFF:
@@ -110,6 +105,7 @@ float begin_odor_A2 = 3250/track;
 float end_odor_A2 = 4480/track; //note that the actual track length can be longer than the specified track value
 
 //unsigned long timeStamp = 0.0; //this generates a time stamp for recording data
+
 unsigned long start_time = 0.0;
 unsigned long current_time = 0.0;
 unsigned long water_valve_close_time = 0.0;
@@ -120,131 +116,131 @@ int licks_per_reward = 3;
 unsigned long drop_size = 30.0; //to determine drop size (in ms)
 unsigned long initial_drop = 0.0; //to determine initial drop size (in ms)
 unsigned long reward_window = 5.0; //in seconds
+unsigned long recordingDuration = 10.0; //(recording duration in seconds)
 int max_lap_count = 20;
 int portStatus = 0;
 
-String comma = ",";
-String dataLog = "BLANK";
-char classified_code = 'c';
+//char classified_code = 'c';
 
 // the loop routine runs over and over again forever:
 void loop() {
   
   //If using the Arduino Serial Moniotor, press 1 and then Enter to start trial
   if (Serial.available()>0){
-    classified_code = Serial.read();
+    char cue_to_start_trial = Serial.read();
     
-    if(classified_code == 49){  // 49 is the ASCII code for the digit 1
-      runCode = 1;
-    }
-
-    drop_size          =        Serial.parseInt();  
-    licks_per_reward   =        Serial.parseInt();    
-    initial_drop       =        Serial.parseInt(); 
-    laps_with_initial_drop =    Serial.parseInt();
-    recordingDuration  =        Serial.parseInt();
-    reward_window      =        Serial.parseInt();
-    max_lap_count      =        Serial.parseInt();
-    track              =        Serial.parseInt();     
-    
-    recordingDuration = recordingDuration * 1000;  // s to ms
-    reward_window = reward_window * 1000.0;   // s to ms
-    //decay_constant = decay_constant / 10.0;
-    
-    start_time = millis();
-    digitalWrite(arduino_to_scope, HIGH); //start imaging
-    
-    first_loop = 1;
-    lick_count = 0;
-    last_rewarded_lick = 0;
-    reward = 0;
-    rewardCount = 0;
-    ttl_count = 0;
-    last_ttl = 0;
-    change = 0;
-    distance = 0;
-    last_rewarded_lap = -1;
-    totalDistance = 0;
-    lap_count = 0;
-    last_rewardCount = 0;
-    last_lap_total_rewards = 0;
-    initial_drop_status = 0;
-    drop_count = 0;
-    last_drop_count = 0;
-    lick_count_at_reward_location = 0;
-    water_valve_close_time = 0;
-    reward_window_end = 0;
-    lick_rate = 0;
-    lick_count_at_last_second = 0;
-    last_open_valve = 0;
-  }
+    if(cue_to_start_trial == 49){  // 49 is the ASCII code for the digit 1
+      //read the parameter values sent from the python GUI
+      drop_size          =        Serial.parseInt();  
+      licks_per_reward   =        Serial.parseInt();    
+      initial_drop       =        Serial.parseInt(); 
+      laps_with_initial_drop =    Serial.parseInt();
+      recordingDuration  =        Serial.parseInt();
+      reward_window      =        Serial.parseInt();
+      max_lap_count      =        Serial.parseInt();
+      track              =        Serial.parseInt();     
+      
+      recordingDuration = recordingDuration * 1000;  // s to ms
+      reward_window = reward_window * 1000.0;   // s to ms
+      
+      //initialize global variable values for the current trial
+      first_loop = 1;
+      lick_count = 0;
+      last_rewarded_lick = 0;
+      reward = 0;
+      rewardCount = 0;
+      ttl_count = 0;
+      last_ttl = 0;
+      //change = 0;
+      distance = 0;
+      last_rewarded_lap = -1;
+      totalDistance = 0;
+      lap_count = 0;
+      last_rewardCount = 0;
+      last_lap_total_rewards = 0;
+      initial_drop_status = 0;
+      drop_count = 0;
+      last_drop_count = 0;
+      lick_count_at_reward_location = 0;
+      water_valve_close_time = 0;
+      reward_window_end = 0;
+      lick_rate = 0;
+      lick_count_at_last_second = 0;
+      last_open_valve = 0;
   
-  while(runCode == 1){
-    current_time = millis() - start_time;
-    
-    //to detect licks
-    lick_sensor = readTouchInputs();
-    lickCounter();
-    
-    //read absolute position on rotary disc and also calculate the corresponding virtual position
-    readPosition();
-    
-    //end the trial if the max number of laps have been reached
-    if (lap_count >= max_lap_count){
-      end_trial();
-      break;
-    }
-
-    //to turn various odor valves on or off
-    odorControl(distance);
-    
-//    if (lap_count <= max_lap_count/2 - 1){
-//      odorControl(distance);
-//    }
-//    else{
-//      digitalWrite(odor_A, LOW);
-//      digitalWrite(odor_B, LOW);
-//      digitalWrite(odor_C, LOW);
-//      digitalWrite(mineral_oil, LOW);
-//      portStatus = 0;
-//    } 
+      //now all ready to start the trial
+      start_time = millis();
+      digitalWrite(arduino_to_scope, HIGH); //start imaging
       
-    //control water delivery
-    if(whether_in_reward_window()) {
-      determineReward();
-    }
-      
-    //if the water valve was opened to start a reward, close the valve at the appropriate time
-    if(current_time >= water_valve_close_time){
-      digitalWrite(water_valve, LOW);
-    }
+      while(true){
+        current_time = millis() - start_time;
+        
+        //to detect licks
+        lick_sensor = readTouchInputs();
+        lickCounter();
+        
+        //read absolute position on rotary disc and also calculate the corresponding virtual position
+        readPosition();
+        
+        //end the trial if the max number of laps have been reached
+        if (lap_count == max_lap_count){
+          end_trial();
+          break;
+        }
     
-    //calculate current lick rate every second ( = number of licks in the last second)
-    if(current_time % 1000 == 0){
-      lick_rate = lick_count - lick_count_at_last_second;
-      lick_count_at_last_second = lick_count;
-    }
-    
-    //read the ttl pulse coming in from the microscope
-    readTTL();
-     
-    //read the status of the imaging trigger signal; it should be ON throughout the recording session
-    imaging_trigger = digitalRead(arduino_to_scope); 
-    
-    //save data every 10ms (rate is higher if there is other activity)
-    if (current_time % 10 <= 1){
-      printer();
-    }
-    
-    //this if statement terminates the data recording session
-    //also makes sure that recording does not end during reward delivery
-    //if the mouse stops moving before arriving at the rewarded region, wait an extra minute before ending the recording session
-    if ((lap_count == max_lap_count)|| 
-       (current_time > recordingDuration + 120000) ||
-       (reward_window_end > recordingDuration) && (current_time > reward_window_end) ||
-       (current_time > recordingDuration) && (distance > end_odor_A2 * track)){
-         end_trial();
-         break;
+        //to turn various odor valves on or off
+        odorControl(distance);
+        
+    //    if (lap_count <= max_lap_count/2 - 1){
+    //      odorControl(distance);
+    //    }
+    //    else{
+    //      digitalWrite(odor_A, LOW);
+    //      digitalWrite(odor_B, LOW);
+    //      digitalWrite(odor_C, LOW);
+    //      digitalWrite(mineral_oil, LOW);
+    //      portStatus = 0;
+    //    } 
+          
+        //control water delivery
+        if(whether_in_reward_window()) {
+          determineReward();
+        }
+          
+        //if the water valve was opened to start a reward, close the valve at the appropriate time
+        if(current_time >= water_valve_close_time){
+          digitalWrite(water_valve, LOW);
+        }
+        
+        //calculate current lick rate every second ( = number of licks in the last second)
+        if(current_time % 1000 == 0){
+          lick_rate = lick_count - lick_count_at_last_second;
+          lick_count_at_last_second = lick_count;
+        }
+        
+        //read the ttl pulse coming in from the microscope
+        readTTL();
+         
+        //read the status of the imaging trigger signal; it should be ON throughout the recording session
+        imaging_trigger = digitalRead(arduino_to_scope); 
+        
+        //save data every 10ms (rate is higher if there is other activity)
+        if (current_time % 20 <= 1){
+          printer();
+        }
+        //printer();
+        
+        //this if statement terminates the data recording session
+        //also makes sure that recording does not end during reward delivery
+        //if the mouse stops moving before arriving at the rewarded region, wait an extra minute before ending the recording session
+        if ((current_time > recordingDuration)){      //(lap_count == max_lap_count)|| 
+           //(current_time > (recordingDuration + 120000)) ||
+           //((reward_window_end > recordingDuration) && (current_time > reward_window_end)) ||
+           //((current_time > recordingDuration) && (distance > end_odor_A2 * track)))
+             end_trial();
+             break;
+        }
+      }
     }
   }
 }
@@ -301,7 +297,7 @@ void readTTL(){
 
 void readPosition(){
   // read the input on analog pin A0:
-  sensorValue = analogRead(A10);
+  float sensorValue = analogRead(A10);
   //sensorValue = (-1) * sensorValue; //to assign which direction is positive rotation
   
   //this makes sure that our distance measurement starts at 0.0cm
@@ -312,7 +308,7 @@ void readPosition(){
   
   //this gives a measure of how much the rotary encoder moved
   //also, reduces random fluctuations due to noise in the reading
-  change = sensorValue -lastSensorValue;
+  float change = sensorValue -lastSensorValue;
   
   //these 'if' statements correct for the cyclic changes in sensorValue to make them linear
   //I chose 500 as the change value because it seems to adequately account for all abrupt changes
@@ -321,9 +317,9 @@ void readPosition(){
   if (change > 500) change = (sensorValue-1023)-lastSensorValue;
   
   // Convert the analog reading (which goes from 0 to 1023) to a distance in mm (0 to 650 mm):
-  rotation_step = change * (650/1023.0);
+  float rotation_step = change * (650/1023.0);
 
-  totalDistance = totalDistance + rotation_step;
+  totalDistance = totalDistance + rotation_step / 1000.0;
   distance = distance + rotation_step;
   
   //restart the virtual track when the reward period ends after the mouse gets to the reward location
@@ -416,6 +412,7 @@ void determineReward(){
 
 
 void odorControl(float curr_distance) {
+
   if ((curr_distance >  0) && (curr_distance <= (begin_odor_C *track))){
     valveSwitch(0);
   }
@@ -481,11 +478,12 @@ void valveSwitch(int valve){
   if(valve != last_open_valve){  // && current_time - time_at_last_valve_switch > 100){
     last_open_valve = valve;
     valveOperator(valve);
+    printer ();
   }
 }
 
 void valveOperator(int valve){
-  time_at_last_valve_switch = current_time;
+  time_at_last_valve_switch = current_time; //this may not be necessary
   
   if (valve == 1){
     digitalWrite(odor_A, HIGH);
@@ -522,6 +520,9 @@ void valveOperator(int valve){
 void printer (){
   //timeStamp = millis() - start_time; //timeStamp in milliseconds
   //could also display these parameters: lick, reward, change, rotation_step, displacement, reward_window_status
+  String comma = ",";
+  String dataLog = "BLANK";
+  
   dataLog = current_time + comma + 
             portStatus + comma + 
             lick + comma + 
@@ -553,8 +554,6 @@ void end_trial(){
   digitalWrite(mineral_oil, LOW);
   digitalWrite(arduino_to_scope, LOW); //stop imaging
   Serial.println("8128");
-  runCode = 0;
 }
   
-
 
