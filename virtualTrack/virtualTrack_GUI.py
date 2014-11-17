@@ -24,7 +24,7 @@ mouse.insert(0,"x") #insert default value for the mouse entry
 
 reward_size_label = Tkinter.Label(window, text="Reward size(ms):").grid(row=1)
 reward_size = Tkinter.Entry(window)
-reward_size.insert(0,"60")
+reward_size.insert(0,"20")
 
 licks_per_reward_label = Tkinter.Label(window, text="Licks per reward:").grid(row=2)
 licks_per_reward = Tkinter.Entry(window)
@@ -32,10 +32,10 @@ licks_per_reward.insert(0,"3")
 
 initial_drop_label = Tkinter.Label(window, text="Initial drop size(ms):").grid(row=3)
 initial_drop = Tkinter.Entry(window)
-initial_drop.insert(0,"60")
+initial_drop.insert(0,"20")
 
 drop_pattern_label = Tkinter.Label(window, text="Laps with initial drop:").grid(row=4)
-drop_pattern = Tkinter.Entry(window, bg = 'light green')
+drop_pattern = Tkinter.Entry(window)
 drop_pattern.insert(0,"50")
 
 recording_duration_label = Tkinter.Label(window, text="Recording duration(s):").grid(row=5)
@@ -48,11 +48,31 @@ reward_window.insert(0,"2")
 
 max_lap_count_label = Tkinter.Label(window, text="Max number of laps:").grid(row=7)
 max_lap_count = Tkinter.Entry(window, bg = 'light green')
-max_lap_count.insert(0,"20")
+max_lap_count.insert(0,"50")
 
 track_label = Tkinter.Label(window, text="Length of virtual track(mm):").grid(row=8)
 track = Tkinter.Entry(window, bg = 'light blue')
 track.insert(0,"4500")
+
+first_odor_label = Tkinter.Label(window, text="First odor:").grid(row=9)
+first_odor = Tkinter.Entry(window, fg = 'red')
+first_odor.insert(0,"3")
+
+second_odor_label = Tkinter.Label(window, text="Second odor:").grid(row=10)
+second_odor = Tkinter.Entry(window, fg = 'red')
+second_odor.insert(0,"1")
+
+third_odor_label = Tkinter.Label(window, text="Third odor:").grid(row=11)
+third_odor = Tkinter.Entry(window, fg = 'red')
+third_odor.insert(0,"2")
+
+fourth_odor_label = Tkinter.Label(window, text="Fourth odor:").grid(row=12)
+fourth_odor = Tkinter.Entry(window, fg = 'red')
+fourth_odor.insert(0,"1")
+
+duration_without_odor_label = Tkinter.Label(window, text="Duration without odor(s):").grid(row=13)
+duration_without_odor = Tkinter.Entry(window)
+duration_without_odor.insert(0,"0")
 
 #arrange the entry fields in a grid layout
 mouse.grid(row=0, column=1)
@@ -64,7 +84,11 @@ recording_duration.grid(row=5, column=1)
 reward_window.grid(row=6, column=1)
 max_lap_count.grid(row=7, column=1)
 track.grid(row=8, column=1)
-
+first_odor.grid(row=9, column=1)
+second_odor.grid(row=10, column=1)
+third_odor.grid(row=11, column=1)
+fourth_odor.grid(row=12, column=1)
+duration_without_odor.grid(row=13, column=1)
 
 ##########################################################################
 
@@ -77,7 +101,12 @@ def arduinoParameters():
 				  recording_duration.get(),		#5
 				  reward_window.get(), 			#6
 				  max_lap_count.get(),			#7
-				  track.get()]					#8
+				  track.get(),					#8
+				  first_odor.get(),				#9
+				  second_odor.get(),			#10
+				  third_odor.get(),				#11
+				  fourth_odor.get(),			#12
+				  duration_without_odor.get()]	#13
 	return parameters
 
 
@@ -94,12 +123,12 @@ def timeStamp(fname, fmt='{fname}_%Y-%m-%d-%Hh-%Mm-%Ss'):
 def dir_timeStamp(fmt='%Y_%m_%d'):
     return datetime.datetime.now().strftime(fmt)
 	
-def arduinoCommunication(parameters):
-	#this tells the arduino to start sending data and also provides parameter values
+# def arduinoCommunication(parameters):
+	# #this tells the arduino to start sending data and also provides parameter values
 
-	duelist = arduinoParameters()
-	arduino_parameter_update = '1,'+ duelist[1]+','+ duelist[2]+','+ duelist[3]+','+ duelist[4]+','+ duelist[5]+','+ duelist[6]+','+ duelist[7]+','+ duelist[8]
-	ser.write(arduino_parameter_update)
+	# duelist = arduinoParameters()
+	# arduino_parameter_update = '1,'+ duelist[1]+','+ duelist[2]+','+ duelist[3]+','+ duelist[4]+','+ duelist[5]+','+ duelist[6]+','+ duelist[7]+','+ duelist[8]
+	# ser.write(arduino_parameter_update)
 
 def main():
 	
@@ -134,7 +163,7 @@ def main():
 	dataLog.write(header)
 	
 	#this tells the arduino to start sending data and also provides parameter values
-	arduino_parameters = '1,'+ fyle[1]+','+ fyle[2]+','+ fyle[3]+','+ fyle[4]+','+ fyle[5]+','+ fyle[6]+','+ fyle[7]+','+ fyle[8]
+	arduino_parameters = '1,'+ fyle[1]+','+ fyle[2]+','+ fyle[3]+','+ fyle[4]+','+ fyle[5]+','+ fyle[6]+','+ fyle[7]+','+ fyle[8]+','+ fyle[9]+','+ fyle[10]+','+ fyle[11]+','+ fyle[12]+','+ fyle[13]
 	ser.write(arduino_parameters) 
 	
 	#updateWindow()
@@ -169,7 +198,7 @@ def main():
 
 #create a button widget
 click_button = Tkinter.Button(window, text="Start", command = main)
-click_button.grid(row=10,column=1)
+click_button.grid(row=15,column=1)
 
 
 #click_button = Tkinter.Button(window, text="Update", command = arduinoCommunication)
