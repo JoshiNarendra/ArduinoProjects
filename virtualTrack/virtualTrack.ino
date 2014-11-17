@@ -204,8 +204,11 @@ void loop() {
           
         lickCounter(); //keep track of licks
 
-        if(current_time <= durationWithoutOdor){
+        if(durationWithoutOdor > 0 && current_time <= durationWithoutOdor){
           laps_without_odor = lap_count;
+        }
+        else if(durationWithoutOdor == 0){// if durationWithoutOdor == 0, give odors in all laps
+          laps_without_odor = -1;
         }
         
         //to control odor valves    

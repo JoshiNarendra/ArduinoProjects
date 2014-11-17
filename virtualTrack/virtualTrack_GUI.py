@@ -123,13 +123,6 @@ def timeStamp(fname, fmt='{fname}_%Y-%m-%d-%Hh-%Mm-%Ss'):
 
 def dir_timeStamp(fmt='%Y_%m_%d'):
     return datetime.datetime.now().strftime(fmt)
-	
-# def arduinoCommunication(parameters):
-	# #this tells the arduino to start sending data and also provides parameter values
-
-	# duelist = arduinoParameters()
-	# arduino_parameter_update = '1,'+ duelist[1]+','+ duelist[2]+','+ duelist[3]+','+ duelist[4]+','+ duelist[5]+','+ duelist[6]+','+ duelist[7]+','+ duelist[8]
-	# ser.write(arduino_parameter_update)
 
 def main():
 	
@@ -182,29 +175,9 @@ def main():
 	dataLog.close()
 
 
-##########################################################################
-
-
-# def updateWindow():
-# 	#create a new window
-# 	uWindow = Tkinter.Tk()
-# 	#set the window title
-# 	uWindow.title("Update")
-# 		
-# 	click_button = Tkinter.Button(uWindow, text="Update")
-# 	click_button.grid(row=11,column=1)
-
-
-##########################################################################
-
 #create a button widget
 click_button = Tkinter.Button(window, text="Start", command = main)
 click_button.grid(row=15,column=1)
-
-
-#click_button = Tkinter.Button(window, text="Update", command = arduinoCommunication)
-#click_button.grid(row=11,column=1)
-
 
 # myGUI = guiMaker()
 #draw the window, and start the 'application'
