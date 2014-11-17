@@ -109,7 +109,7 @@ def main():
 	print 'Name of this file is: ' + filename
 	
 	#create a .csv file inside a folder for each mouse to save incoming data from the arduino
-	dir_path = './Recordings/' + fyle[0] + '/' + fyle[0] + '_' + dir_timeStamp()
+	dir_path = 'C:/Users/axel/Desktop/Recordings/' + fyle[0] + '/' + fyle[0] + '_' + dir_timeStamp()
 	filename = dir_path + '/' + filename
 	if dir_path:
 		if not os.path.isdir(dir_path):
