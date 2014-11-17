@@ -106,8 +106,7 @@ int second_odor = 1;
 int third_odor = 2;
 int fourth_odor = 1;
 
-//unsigned long timeStamp = 0.0; //this generates a time stamp for recording data
-
+//various time variables
 unsigned long start_time = 0.0;
 unsigned long current_time = 0.0;
 unsigned long water_valve_close_time = 0.0;
@@ -122,8 +121,6 @@ unsigned long recordingDuration = 50.0; //(recording duration in seconds)
 unsigned long durationWithoutOdor = 25.0; //time at the beginning when no odors are presented
 int max_lap_count = 20;
 int portStatus = 0;
-
-//char classified_code = 'c';
 
 // the loop routine runs over and over again forever:
 void loop() {
@@ -159,7 +156,6 @@ void loop() {
       rewardCount = 0;
       ttl_count = 0;
       last_ttl = 0;
-      //change = 0;
       distance = 0;
       last_rewarded_lap = -1;
       totalDistance = 0;
@@ -247,8 +243,6 @@ void loop() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////detect and keep track of licks//////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -300,12 +294,6 @@ void readPosition(){
   // read the input on analog pin A0:
   float sensorValue = analogRead(A10);
   //sensorValue = (-1) * sensorValue; //to assign which direction is positive rotation
-  
-//  //this makes sure that our distance measurement starts at 0.0cm
-//  if (first_loop == 1){
-//    lastSensorValue = sensorValue;
-//    first_loop = 0;
-//  }
   
   //this gives a measure of how much the rotary encoder moved
   //also, reduces random fluctuations due to noise in the reading
