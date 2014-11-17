@@ -54,16 +54,13 @@ void setup() {
   digitalWrite(odor_E, LOW);
   digitalWrite(odor_F, LOW);
   digitalWrite(mineral_oil, LOW);
-  digitalWrite(arduino_to_scope, LOW);
+  digitalWrite(arduino_to_scope, HIGH);
   digitalWrite(scope_to_arduino, LOW); 
 
   prepare_lickport(); 
 }
 
-int first_loop = 0;
-
 bool lick = false;
-bool lick_sensor = false; // lickStatus is 1 when lick occurs and 0 otherwise
 bool last_lick = false;
 int lick_count = 0;
 int last_rewarded_lick = 0;
@@ -144,7 +141,6 @@ void loop() {
       reward_window = reward_window * 1000.0;   // s to ms
       
       //initialize global variable values for the current trial
-      first_loop = 1;
       lick_count = 0;
       last_rewarded_lick = 0;
       reward = 0;
@@ -170,17 +166,19 @@ void loop() {
   
       //now all ready to start the trial
       start_time = millis();
-      digitalWrite(arduino_to_scope, HIGH); //start imaging
+      lastSensorValue = analogRead(A10); //to make sure that distance measurement starts from 0 mm
+      digitalWrite(arduino_to_scope, LOW); //start imaging
       
       while(true){
-        current_time = millis() - start_time;
+        current_time = millis() - start_time; //get the current time in this trial   
+
+        //if the water valve is in opened state, check if it's time to close the valve
+        if(current_time >= water_valve_close_time){
+          digitalWrite(water_valve, LOW);
+        }
         
-        //to detect licks
-        lick_sensor = readTouchInputs();
-        lickCounter();
-        
-        //read absolute position on rotary disc and also calculate the corresponding virtual position
-        readPosition();
+        lickCounter(); //keep track of licks    
+        readPosition(); //read absolute position on rotary encoder and also calculate the corresponding virtual position
         
         //end the trial if the max number of laps have been reached
         if (lap_count == max_lap_count){
@@ -190,6 +188,9 @@ void loop() {
     
         //to turn various odor valves on or off
         odorControl(distance);
+        
+        //if(current_time <= recordingDuration / 2 && 
+
         
     //    if (lap_count <= max_lap_count/2 - 1){
     //      odorControl(distance);
@@ -207,11 +208,6 @@ void loop() {
           determineReward();
         }
           
-        //if the water valve was opened to start a reward, close the valve at the appropriate time
-        if(current_time >= water_valve_close_time){
-          digitalWrite(water_valve, LOW);
-        }
-        
         //calculate current lick rate every second ( = number of licks in the last second)
         if(current_time % 1000 == 0){
           lick_rate = lick_count - lick_count_at_last_second;
@@ -228,15 +224,12 @@ void loop() {
         if (current_time % 20 <= 1){
           printer();
         }
-        //printer();
         
         //this if statement terminates the data recording session
         //also makes sure that recording does not end during reward delivery
         //if the mouse stops moving before arriving at the rewarded region, wait an extra minute before ending the recording session
-        if ((current_time > recordingDuration)){      //(lap_count == max_lap_count)|| 
-           //(current_time > (recordingDuration + 120000)) ||
-           //((reward_window_end > recordingDuration) && (current_time > reward_window_end)) ||
-           //((current_time > recordingDuration) && (distance > end_odor_A2 * track)))
+        if ((current_time > (recordingDuration + 120000)) ||
+           ((reward_window_end > recordingDuration) && (whether_in_reward_window() == false))){
              end_trial();
              break;
         }
@@ -253,6 +246,7 @@ void loop() {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 void lickCounter(){
+  bool lick_sensor = readTouchInputs(); //to detect licks
   if (lick_sensor == HIGH && last_lick == LOW) {
     lick = true;
     lick_count = lick_count + 1;
@@ -300,15 +294,15 @@ void readPosition(){
   float sensorValue = analogRead(A10);
   //sensorValue = (-1) * sensorValue; //to assign which direction is positive rotation
   
-  //this makes sure that our distance measurement starts at 0.0cm
-  if (first_loop == 1){
-    lastSensorValue = sensorValue;
-    first_loop = 0;
-  }
+//  //this makes sure that our distance measurement starts at 0.0cm
+//  if (first_loop == 1){
+//    lastSensorValue = sensorValue;
+//    first_loop = 0;
+//  }
   
   //this gives a measure of how much the rotary encoder moved
   //also, reduces random fluctuations due to noise in the reading
-  float change = sensorValue -lastSensorValue;
+  float change = sensorValue - lastSensorValue;
   
   //these 'if' statements correct for the cyclic changes in sensorValue to make them linear
   //I chose 500 as the change value because it seems to adequately account for all abrupt changes
@@ -330,20 +324,7 @@ void readPosition(){
     last_lap_total_rewards = rewardCount - last_rewardCount;
     last_rewardCount = rewardCount;
     last_drop_count = drop_count;  //to keep track of the number of initial drops delivered up to this point
-  }
-  
-//  //this resets every time the mouse runs a full lap of the virtual track
-//  if (distance > track){
-//    distance = distance - track; 
-//    lap_count = lap_count + 1; //lap_count increases only if the mouse moves in forward direction
-////    if (lap_count >= max_lap_count){ //stop the recording when 20 laps are completed
-////      runCode = 0;
-////    }
-//    last_lap_total_rewards = rewardCount - last_rewardCount;
-//    last_rewardCount = rewardCount;
-//    last_drop_count = drop_count;  //to keep track of the number of initial drops delivered up to this point
-//    printer();
-//  }
+  } 
   
   if (distance*(-1) > track){  //if the mouse is moving in backward direction
     distance = distance + track;
@@ -367,12 +348,11 @@ bool whether_in_reward_window(){
    last_rewarded_lap = lap_count;
   }
   
-  //reward window duration starts after the mouse gets its first reward
+  //reward window duration resets after the mouse gets its first reward
   if (lick_count - lick_count_at_reward_location == licks_per_reward){
    reward_window_end = current_time + reward_window;
   }  
   
-
   //reward available only if the mouse remains within the the rewarded region of the virtual track
   return ((current_time <= reward_window_end) && 
           (distance >= reward_location * track) && 
@@ -380,8 +360,6 @@ bool whether_in_reward_window(){
 }
 
 void determineReward(){
-  //give reward only if the reward window is on AND the mouse is licking 
-
   //for the very first water reward in the current lap
   if(drop_count == last_drop_count && initial_drop > 0){
     if(lap_count < laps_with_initial_drop){
@@ -390,7 +368,6 @@ void determineReward(){
        giveReward(initial_drop);
        initial_drop_status = 0;
     }
-    
     else if(last_lap_total_rewards < 1 && lap_count > 0){
        initial_drop_status = 1;
        drop_count = drop_count + 1;
@@ -399,7 +376,7 @@ void determineReward(){
      }
   }
  
-   //for the remaining rewards in the current lap
+  //give reward only if the reward window is on AND the mouse is licking at the specified lick_rate
   int lick_count_in_reward_region = lick_count - lick_count_at_reward_location;
   if(lick_count_in_reward_region  > 0 &&
      lick_count_in_reward_region  % licks_per_reward == 0 && 
@@ -408,7 +385,6 @@ void determineReward(){
         giveReward(drop_size);
       }
 }
-
 
 
 void odorControl(float curr_distance) {
@@ -516,9 +492,7 @@ void valveOperator(int valve){
 }
 
 
-
 void printer (){
-  //timeStamp = millis() - start_time; //timeStamp in milliseconds
   //could also display these parameters: lick, reward, change, rotation_step, displacement, reward_window_status
   String comma = ",";
   String dataLog = "BLANK";
@@ -552,8 +526,6 @@ void end_trial(){
   digitalWrite(odor_E, LOW);
   digitalWrite(odor_F, LOW);  
   digitalWrite(mineral_oil, LOW);
-  digitalWrite(arduino_to_scope, LOW); //stop imaging
+  digitalWrite(arduino_to_scope, HIGH); //stop imaging
   Serial.println("8128");
 }
-  
-
