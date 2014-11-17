@@ -39,40 +39,40 @@ drop_pattern = Tkinter.Entry(window)
 drop_pattern.insert(0,"50")
 
 recording_duration_label = Tkinter.Label(window, text="Recording duration(s):").grid(row=5)
-recording_duration = Tkinter.Entry(window)
+recording_duration = Tkinter.Entry(window, fg = 'blue')
 recording_duration.insert(0,"300")
 
-reward_window_label = Tkinter.Label(window, text="Reward window(s):").grid(row=6)
+duration_without_odor_label = Tkinter.Label(window, text="Duration without odor(s):").grid(row=6)
+duration_without_odor = Tkinter.Entry(window, fg = 'blue')
+duration_without_odor.insert(0,"0")
+
+reward_window_label = Tkinter.Label(window, text="Reward window(s):").grid(row=7)
 reward_window = Tkinter.Entry(window)
 reward_window.insert(0,"2")
 
-max_lap_count_label = Tkinter.Label(window, text="Max number of laps:").grid(row=7)
+max_lap_count_label = Tkinter.Label(window, text="Max number of laps:").grid(row=8)
 max_lap_count = Tkinter.Entry(window, bg = 'light green')
 max_lap_count.insert(0,"50")
 
-track_label = Tkinter.Label(window, text="Length of virtual track(mm):").grid(row=8)
+track_label = Tkinter.Label(window, text="Length of virtual track(mm):").grid(row=9)
 track = Tkinter.Entry(window, bg = 'light blue')
 track.insert(0,"4500")
 
-first_odor_label = Tkinter.Label(window, text="First odor:").grid(row=9)
+first_odor_label = Tkinter.Label(window, text="First odor:").grid(row=10)
 first_odor = Tkinter.Entry(window, fg = 'red')
 first_odor.insert(0,"3")
 
-second_odor_label = Tkinter.Label(window, text="Second odor:").grid(row=10)
+second_odor_label = Tkinter.Label(window, text="Second odor:").grid(row=11)
 second_odor = Tkinter.Entry(window, fg = 'red')
 second_odor.insert(0,"1")
 
-third_odor_label = Tkinter.Label(window, text="Third odor:").grid(row=11)
+third_odor_label = Tkinter.Label(window, text="Third odor:").grid(row=12)
 third_odor = Tkinter.Entry(window, fg = 'red')
 third_odor.insert(0,"2")
 
-fourth_odor_label = Tkinter.Label(window, text="Fourth odor:").grid(row=12)
+fourth_odor_label = Tkinter.Label(window, text="Fourth odor:").grid(row=13)
 fourth_odor = Tkinter.Entry(window, fg = 'red')
 fourth_odor.insert(0,"1")
-
-duration_without_odor_label = Tkinter.Label(window, text="Duration without odor(s):").grid(row=13)
-duration_without_odor = Tkinter.Entry(window)
-duration_without_odor.insert(0,"0")
 
 #arrange the entry fields in a grid layout
 mouse.grid(row=0, column=1)
@@ -81,14 +81,15 @@ licks_per_reward.grid(row=2, column=1)
 initial_drop.grid(row=3, column=1)
 drop_pattern.grid(row=4, column=1)
 recording_duration.grid(row=5, column=1)
-reward_window.grid(row=6, column=1)
-max_lap_count.grid(row=7, column=1)
-track.grid(row=8, column=1)
-first_odor.grid(row=9, column=1)
-second_odor.grid(row=10, column=1)
-third_odor.grid(row=11, column=1)
-fourth_odor.grid(row=12, column=1)
-duration_without_odor.grid(row=13, column=1)
+duration_without_odor.grid(row=6, column=1)
+reward_window.grid(row=7, column=1)
+max_lap_count.grid(row=8, column=1)
+track.grid(row=9, column=1)
+first_odor.grid(row=10, column=1)
+second_odor.grid(row=11, column=1)
+third_odor.grid(row=12, column=1)
+fourth_odor.grid(row=13, column=1)
+
 
 ##########################################################################
 

@@ -183,28 +183,37 @@ void loop() {
       digitalWrite(arduino_to_scope, LOW); //start imaging
       
       while(true){
-        current_time = millis() - start_time; //get the current time in this trial   
+        current_time = millis() - start_time; //get the current time in this trial
+        readPosition(); //read absolute position on rotary encoder and also calculate the corresponding virtual position
+
+        //this if statement terminates the data recording session
+        //when the max number of laps have been reached or when recording duration ends
+        //it also makes sure that recording does not end during reward delivery
+        //if the mouse stops moving before arriving at the rewarded region, wait an extra 120s before ending the recording session
+        if ((lap_count == max_lap_count)||
+           (current_time > (recordingDuration + 120000)) ||
+           ((reward_window_end > recordingDuration) && (whether_in_reward_window() == false))){
+             end_trial();
+             break;
+        }
 
         //if the water valve is in opened state, check if it's time to close the valve
         if(current_time >= water_valve_close_time){
           digitalWrite(water_valve, LOW);
         }
+          
+        lickCounter(); //keep track of licks
+
         if(current_time <= durationWithoutOdor){
           laps_without_odor = lap_count;
         }
         
-        lickCounter(); //keep track of licks    
-        readPosition(); //read absolute position on rotary encoder and also calculate the corresponding virtual position
-        
-        //end the trial if the max number of laps have been reached
-        if (lap_count == max_lap_count){
-          end_trial();
-          break;
-        }
-    
-        //to turn various odor valves on or off        
+        //to control odor valves    
         if(lap_count > laps_without_odor){
-          odorControl(distance);
+          odorControl();
+        }
+        else{
+          valveOperator(0);
         }
 
         //control water delivery
@@ -227,15 +236,6 @@ void loop() {
         //save data every 10ms (rate is higher if there is other activity)
         if (current_time % 20 <= 1){
           printer();
-        }
-        
-        //this if statement terminates the data recording session
-        //also makes sure that recording does not end during reward delivery
-        //if the mouse stops moving before arriving at the rewarded region, wait an extra minute before ending the recording session
-        if ((current_time > (recordingDuration + 120000)) ||
-           ((reward_window_end > recordingDuration) && (whether_in_reward_window() == false))){
-             end_trial();
-             break;
         }
       }
     }
@@ -391,62 +391,62 @@ void determineReward(){
 }
 
 
-void odorControl(float curr_distance) {
+void odorControl() {
 
-  if ((curr_distance >  0) && (curr_distance <= (begin_first_odor *track))){
+  if ((distance >  0) && (distance <= (begin_first_odor *track))){
     valveSwitch(0);
   }
-  else if ((curr_distance > (begin_first_odor * track)) && (curr_distance <= (end_first_odor *track))){
+  else if ((distance > (begin_first_odor * track)) && (distance <= (end_first_odor *track))){
     valveSwitch(first_odor);
   }
-  else if ((curr_distance > (end_first_odor * track)) && (curr_distance <= (begin_second_odor * track))){
+  else if ((distance > (end_first_odor * track)) && (distance <= (begin_second_odor * track))){
     valveSwitch(0);
   }  
-  else if ((curr_distance > (begin_second_odor * track)) && (curr_distance <= (end_second_odor * track ))){
+  else if ((distance > (begin_second_odor * track)) && (distance <= (end_second_odor * track ))){
     valveSwitch(second_odor);
   }
-  else if ((curr_distance > (end_second_odor * track )) && (curr_distance <= (begin_third_odor * track))){
+  else if ((distance > (end_second_odor * track )) && (distance <= (begin_third_odor * track))){
     valveSwitch(0);
   }
-  else if ((curr_distance > (begin_third_odor * track)) && (curr_distance <= (end_third_odor * track))){
+  else if ((distance > (begin_third_odor * track)) && (distance <= (end_third_odor * track))){
     valveSwitch(third_odor);
   }
-  else if ((curr_distance > (end_third_odor * track)) && (curr_distance <= (begin_fourth_odor * track))){
+  else if ((distance > (end_third_odor * track)) && (distance <= (begin_fourth_odor * track))){
     valveSwitch(0);
   }
-  else if ((curr_distance > (begin_fourth_odor * track)) && (curr_distance <= (end_fourth_odor *track))){
+  else if ((distance > (begin_fourth_odor * track)) && (distance <= (end_fourth_odor *track))){
     valveSwitch(fourth_odor);
   }  
-  else if ((curr_distance > (end_fourth_odor * track)) && (curr_distance <= track)){
+  else if ((distance > (end_fourth_odor * track)) && (distance <= track)){
     valveSwitch(0);
   }
   
   /////for movement in negative direction/////////
-  else if ((curr_distance >  (0 - track)) && (curr_distance <= ((begin_first_odor - 1)*track))){
+  else if ((distance >  (0 - track)) && (distance <= ((begin_first_odor - 1)*track))){
     valveSwitch(0);
   }
-  else if ((curr_distance > ((begin_first_odor - 1)*track)) && (curr_distance <= ((end_first_odor - 1)*track))){
+  else if ((distance > ((begin_first_odor - 1)*track)) && (distance <= ((end_first_odor - 1)*track))){
     valveSwitch(first_odor);
   }
-  else if ((curr_distance > ((end_first_odor - 1)*track)) && (curr_distance <= ((begin_second_odor - 1)*track))){
+  else if ((distance > ((end_first_odor - 1)*track)) && (distance <= ((begin_second_odor - 1)*track))){
     valveSwitch(0);
   }  
-  else if ((curr_distance > ((begin_second_odor - 1)*track)) && (curr_distance <= ((end_second_odor - 1)*track))){
+  else if ((distance > ((begin_second_odor - 1)*track)) && (distance <= ((end_second_odor - 1)*track))){
     valveSwitch(second_odor);
   }
-  else if ((curr_distance > ((end_second_odor - 1)*track)) && (curr_distance <= ((begin_third_odor - 1)*track))){
+  else if ((distance > ((end_second_odor - 1)*track)) && (distance <= ((begin_third_odor - 1)*track))){
     valveSwitch(0);
   }
-  else if ((curr_distance > ((begin_third_odor - 1)*track)) && (curr_distance <= ((end_third_odor - 1)*track))){
+  else if ((distance > ((begin_third_odor - 1)*track)) && (distance <= ((end_third_odor - 1)*track))){
     valveSwitch(third_odor);
   }
-  else if ((curr_distance > ((end_third_odor - 1)*track)) && (curr_distance <= ((begin_fourth_odor - 1)*track))){
+  else if ((distance > ((end_third_odor - 1)*track)) && (distance <= ((begin_fourth_odor - 1)*track))){
     valveSwitch(0);
   }
-  else if ((curr_distance > ((begin_fourth_odor - 1)*track)) && (curr_distance <= ((end_fourth_odor - 1)*track))){
+  else if ((distance > ((begin_fourth_odor - 1)*track)) && (distance <= ((end_fourth_odor - 1)*track))){
     valveSwitch(fourth_odor);
   }  
-  else if ((curr_distance > ((end_fourth_odor - 1)*track)) && (curr_distance <= 0)){
+  else if ((distance > ((end_fourth_odor - 1)*track)) && (distance <= 0)){
     valveSwitch(0);
   }
   else{
