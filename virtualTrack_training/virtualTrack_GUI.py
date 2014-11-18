@@ -3,7 +3,8 @@ import serial
 import time
 import datetime
 import os, errno
-ser = serial.Serial('/dev/ttyS4',115200)
+ser = serial.Serial(5,115200) #ArduinoMega is on COM6 port
+#ser = serial.Serial('/dev/ttyS4',115200)
 
 #create a new window
 window = Tkinter.Tk()

@@ -216,7 +216,7 @@ void loop() {
           odorControl();
         }
         else{
-          valveOperator(0);
+          valveSwitch(0);
         }
 
         //control water delivery
@@ -533,6 +533,7 @@ void end_trial(){
   digitalWrite(odor_E, LOW);
   digitalWrite(odor_F, LOW);  
   digitalWrite(mineral_oil, LOW);
+  portStatus = 0;
   digitalWrite(arduino_to_scope, HIGH); //stop imaging
   Serial.println("8128");
 }

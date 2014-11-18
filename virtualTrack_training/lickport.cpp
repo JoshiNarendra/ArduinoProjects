@@ -23,10 +23,11 @@
  by: nj2292@columbia.edu
 */
 
+#include <Arduino.h>
 #include "parameter_definitions.h"
 #include <Wire.h>
 
-boolean touchStates[12]; //to keep track of the previous touch states
+bool touchStates[12]; //to keep track of the previous touch states
 
 void prepare_lickport(){
   Wire.begin();

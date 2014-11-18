@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <Wire.h>
 #include "parameter_definitions.h"
 
@@ -46,8 +47,6 @@ int imaging_trigger = 0;
 
 int runCode = 0;
 int first_loop = 0;
-int recordingDuration = 10; //(recording duration in seconds)
-int portStatus = 0;
 
 int sensorValue = 0;
 int lastSensorValue = 0;
@@ -75,6 +74,7 @@ int licks_per_reward = 3;
 unsigned long drop_size = 30.0; //to determine drop size (in ms)
 unsigned long initial_drop = 0.0; //to determine initial drop size (in ms)
 unsigned long reward_window = 1.0; //in seconds
+unsigned long recordingDuration = 10; //(recording duration in seconds)
 //bool reward_window_status = false;
 
 String comma = ",";
@@ -265,7 +265,7 @@ void printer (){
   //timeStamp = millis() - start_time; //timeStamp in milliseconds
   //could also display these parameters: lick, reward, change, rotation_step, displacement, reward_window_status
   String dataLog = current_time + comma + 
-                   portStatus + comma + 
+                   0 + comma + 
                    lick + comma + 
                    lick_count + comma + 
                    reward + comma + 
