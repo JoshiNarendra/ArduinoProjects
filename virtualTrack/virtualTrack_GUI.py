@@ -15,101 +15,128 @@ ser = serial.Serial(5,115200) #ArduinoMega is on COM6 port
 #create a new window
 window = Tkinter.Tk()
 #set the window title
-window.title("Rotary Disc Experiment")
+window.title("Mouse Virtual Reality Experiment")
 
 
-mouse_label = Tkinter.Label(window, text="Mouse").grid(row=0) #create a label widget
+mouse_label = Tkinter.Label(window, text="Mouse ID:").grid(row=0) #create a label widget
 mouse = Tkinter.Entry(window) #create a text entry widget
 mouse.insert(0,"x") #insert default value for the mouse entry
 
 reward_size_label = Tkinter.Label(window, text="Reward size(ms):").grid(row=1)
 reward_size = Tkinter.Entry(window)
-reward_size.insert(0,"20")
+reward_size.insert(0,"30")
 
 licks_per_reward_label = Tkinter.Label(window, text="Licks per reward:").grid(row=2)
 licks_per_reward = Tkinter.Entry(window)
-licks_per_reward.insert(0,"3")
+licks_per_reward.insert(0,"2")
 
 initial_drop_label = Tkinter.Label(window, text="Initial drop size(ms):").grid(row=3)
 initial_drop = Tkinter.Entry(window)
-initial_drop.insert(0,"20")
+initial_drop.insert(0,"30")
 
-drop_pattern_label = Tkinter.Label(window, text="Laps with initial drop:").grid(row=4)
+max_lap_count_label = Tkinter.Label(window, text="Max number of laps:").grid(row=4)
+max_lap_count = Tkinter.Entry(window, bg = 'light green')
+max_lap_count.insert(0,"100")
+
+drop_pattern_label = Tkinter.Label(window, text="Laps with initial drop:").grid(row=5)
 drop_pattern = Tkinter.Entry(window)
-drop_pattern.insert(0,"50")
+drop_pattern.insert(0,"100")
 
-recording_duration_label = Tkinter.Label(window, text="Recording duration(s):").grid(row=5)
-recording_duration = Tkinter.Entry(window, fg = 'blue')
-recording_duration.insert(0,"300")
-
-duration_without_odor_label = Tkinter.Label(window, text="Duration without odor(s):").grid(row=6)
-duration_without_odor = Tkinter.Entry(window, fg = 'blue')
-duration_without_odor.insert(0,"0")
-
-reward_window_label = Tkinter.Label(window, text="Reward window(s):").grid(row=7)
+reward_window_label = Tkinter.Label(window, text="Reward window(s):").grid(row=6)
 reward_window = Tkinter.Entry(window)
 reward_window.insert(0,"2")
 
-max_lap_count_label = Tkinter.Label(window, text="Max number of laps:").grid(row=8)
-max_lap_count = Tkinter.Entry(window, bg = 'light green')
-max_lap_count.insert(0,"50")
-
-track_label = Tkinter.Label(window, text="Length of virtual track(mm):").grid(row=9)
+track_label = Tkinter.Label(window, text="Length of virtual track(mm):").grid(row=7)
 track = Tkinter.Entry(window, bg = 'light blue')
 track.insert(0,"4500")
 
-first_odor_label = Tkinter.Label(window, text="First odor:").grid(row=10)
-first_odor = Tkinter.Entry(window, fg = 'red')
-first_odor.insert(0,"3")
+blank_label = Tkinter.Label(window).grid(row=8)
 
-second_odor_label = Tkinter.Label(window, text="Second odor:").grid(row=11)
-second_odor = Tkinter.Entry(window, fg = 'red')
-second_odor.insert(0,"1")
+envA_duration_label = Tkinter.Label(window, text="Environment A duration(s):").grid(row=9)
+envA_duration = Tkinter.Entry(window, fg = 'blue')
+envA_duration.insert(0,"300")
 
-third_odor_label = Tkinter.Label(window, text="Third odor:").grid(row=12)
-third_odor = Tkinter.Entry(window, fg = 'red')
-third_odor.insert(0,"2")
+envA_odor1_label = Tkinter.Label(window, text="envA_odor1:").grid(row=10)
+envA_odor1 = Tkinter.Entry(window, fg = 'red')
+envA_odor1.insert(0,"3")
 
-fourth_odor_label = Tkinter.Label(window, text="Fourth odor:").grid(row=13)
-fourth_odor = Tkinter.Entry(window, fg = 'red')
-fourth_odor.insert(0,"1")
+envA_odor2_label = Tkinter.Label(window, text="envA_odor2:").grid(row=11)
+envA_odor2 = Tkinter.Entry(window, fg = 'red')
+envA_odor2.insert(0,"1")
+
+envA_odor3_label = Tkinter.Label(window, text="envA_odor3:").grid(row=12)
+envA_odor3 = Tkinter.Entry(window, fg = 'red')
+envA_odor3.insert(0,"2")
+
+envA_odor4_label = Tkinter.Label(window, text="envA_odor4:").grid(row=13)
+envA_odor4 = Tkinter.Entry(window, fg = 'red')
+envA_odor4.insert(0,"1")
+
+blank_label = Tkinter.Label(window).grid(row=14)
+
+envB_duration_label = Tkinter.Label(window, text="Environment B duration(s):").grid(row=15)
+envB_duration = Tkinter.Entry(window, fg = 'blue')
+envB_duration.insert(0,"0")
+
+envB_odor1_label = Tkinter.Label(window, text="envB_odor1:").grid(row=16)
+envB_odor1 = Tkinter.Entry(window, fg = 'red')
+envB_odor1.insert(0,"3")
+
+envB_odor2_label = Tkinter.Label(window, text="envB_odor2:").grid(row=17)
+envB_odor2 = Tkinter.Entry(window, fg = 'red')
+envB_odor2.insert(0,"1")
+
+envB_odor3_label = Tkinter.Label(window, text="envB_odor3:").grid(row=18)
+envB_odor3 = Tkinter.Entry(window, fg = 'red')
+envB_odor3.insert(0,"2")
+
+envB_odor4_label = Tkinter.Label(window, text="envB_odor4:").grid(row=19)
+envB_odor4 = Tkinter.Entry(window, fg = 'red')
+envB_odor4.insert(0,"1")
 
 #arrange the entry fields in a grid layout
 mouse.grid(row=0, column=1)
 reward_size.grid(row=1, column=1)
 licks_per_reward.grid(row=2, column=1)
 initial_drop.grid(row=3, column=1)
-drop_pattern.grid(row=4, column=1)
-recording_duration.grid(row=5, column=1)
-duration_without_odor.grid(row=6, column=1)
-reward_window.grid(row=7, column=1)
-max_lap_count.grid(row=8, column=1)
-track.grid(row=9, column=1)
-first_odor.grid(row=10, column=1)
-second_odor.grid(row=11, column=1)
-third_odor.grid(row=12, column=1)
-fourth_odor.grid(row=13, column=1)
+max_lap_count.grid(row=4, column=1)
+drop_pattern.grid(row=5, column=1)
+reward_window.grid(row=6, column=1)
+track.grid(row=7, column=1)
 
+envA_duration.grid(row=9, column=1)
+envA_odor1.grid(row=10, column=1)
+envA_odor2.grid(row=11, column=1)
+envA_odor3.grid(row=12, column=1)
+envA_odor4.grid(row=13, column=1)
+
+envB_duration.grid(row=15, column=1)
+envB_odor1.grid(row=16, column=1)
+envB_odor2.grid(row=17, column=1)
+envB_odor3.grid(row=18, column=1)
+envB_odor4.grid(row=19, column=1)
 
 ##########################################################################
-
 def arduinoParameters():
 	parameters = [mouse.get(), 					#0
 				  reward_size.get(), 			#1
 				  licks_per_reward.get(), 		#2
 				  initial_drop.get(), 			#3
-				  drop_pattern.get(),			#4
-				  recording_duration.get(),		#5
-				  reward_window.get(), 			#6
-				  max_lap_count.get(),			#7
-				  track.get(),					#8
-				  first_odor.get(),				#9
-				  second_odor.get(),			#10
-				  third_odor.get(),				#11
-				  fourth_odor.get(),			#12
-				  duration_without_odor.get()]	#13
+				  max_lap_count.get(),			#4
+				  drop_pattern.get(),			#5			 
+				  reward_window.get(), 			#6				
+				  track.get(),					#7
+				  envA_duration.get(),			#8
+				  envA_odor1.get(),				#9
+				  envA_odor2.get(),				#10
+				  envA_odor3.get(),				#11
+				  envA_odor4.get(),				#12
+				  envB_duration.get(),			#13
+				  envB_odor1.get(),				#14
+				  envB_odor2.get(),				#15
+				  envB_odor3.get(),				#16
+				  envB_odor4.get()]				#17
 	return parameters
-
 
 def num(s):
     try:
@@ -144,23 +171,48 @@ def main():
 					',Reward_size,'+ fyle[1] + 
 					',Licks_per_reward,'+ fyle[2]+
 					',Initial_drop,'+ fyle[3]+
-					',Laps_with_definite_drop,'+ fyle[4]+
-					',Recording_duration,'+ fyle[5]+
+					',Max_number_of_laps,'+ fyle[4]+
+					',Laps_with_initial_drop,'+ fyle[5]+					
 					',Reward_window,'+ fyle[6]+
 					',Track_length,'+ fyle[7]+
+					',EnvA_duration,'+ fyle[8]+
+					',envA_odor1,'+ fyle[9]+
+					',envA_odor2,'+ fyle[10]+
+					',envA_odor3,'+ fyle[11]+
+					',envA_odor4,'+ fyle[12]+
+					',EnvB_duration,'+ fyle[13]+
+					',envB_odor1,'+ fyle[14]+
+					',envB_odor2,'+ fyle[15]+
+					',envB_odor3,'+ fyle[16]+
+					',envB_odor4,'+ fyle[17]+
 					'\n')	
 	dataLog.write(trial_details)
 	
 	#this header assigns the labels for each column of the saved data
-	header = 'Time,Valve,Lick,LickCount,Reward,RewardCount,Distance,TotalDistance,RewardWindow,InitialDrop,InitialDropCount,ImagingTrigger,TTLpulse,TTLtotalCount,LickRate,LapCount\n'
+	header = 'Time,Valve,Lick,LickCount,Reward,RewardCount,Distance,TotalDistance,RewardWindow,InitialDrop,InitialDropCount,ImagingTrigger,TTLpulse,TTLtotalCount,LickRate,LapCount,Environment\n'
 	print header.rstrip('\n')
 	dataLog.write(header)
 	
 	#this tells the arduino to start sending data and also provides parameter values
-	arduino_parameters = '1,'+ fyle[1]+','+ fyle[2]+','+ fyle[3]+','+ fyle[4]+','+ fyle[5]+','+ fyle[6]+','+ fyle[7]+','+ fyle[8]+','+ fyle[9]+','+ fyle[10]+','+ fyle[11]+','+ fyle[12]+','+ fyle[13]
+	arduino_parameters = ('1,'+ 
+						 fyle[1]+','+ 
+						 fyle[2]+','+ 
+						 fyle[3]+','+ 
+						 fyle[4]+','+ 
+						 fyle[5]+','+ 
+						 fyle[6]+','+ 
+						 fyle[7]+','+ 
+						 fyle[8]+','+ 
+						 fyle[9]+','+ 
+						 fyle[10]+','+ 
+						 fyle[11]+','+ 
+						 fyle[12]+','+ 
+						 fyle[13]+','+ 
+						 fyle[14]+','+ 
+						 fyle[15]+','+ 
+						 fyle[16]+','+ 
+						 fyle[17])
 	ser.write(arduino_parameters) 
-	
-	#updateWindow()
 	
 	#now receive and save data, one line per loop
 	while True:
@@ -174,13 +226,10 @@ def main():
 		dataLog.write(currentInput)
 	dataLog.close()
 
-
 #create a button widget
 click_button = Tkinter.Button(window, text="Start", command = main)
-click_button.grid(row=15,column=1)
+click_button.grid(row=20,column=1)
 
 # myGUI = guiMaker()
 #draw the window, and start the 'application'
 window.mainloop()
-
-

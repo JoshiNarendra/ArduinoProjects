@@ -82,11 +82,14 @@ int laps_with_initial_drop = 0;
 int lick_rate = 0;
 int lick_count_at_last_second = 0;
 int last_open_valve = 0;
-int laps_without_odor = 0;
+int laps_in_envA = 0;
+int environment = 0;
+int location_at_last_valve_switch = 0;
 
 //variables for keeping track of distance recorded by rotary encoder
 float lastSensorValue = 0.0;
 float distance = 0.0;
+float last_distance = 0.0;
 float totalDistance = 0.0;
 
 //assuming that the virtual track is 5000 mm long
@@ -100,25 +103,35 @@ float end_second_odor = 2000/track;
 float begin_third_odor = 2250/track;
 float end_third_odor = 3000/track;
 float begin_fourth_odor = 3250/track;
-float end_fourth_odor = 4480/track; //note that the actual track length can be longer than the specified track value
+float end_fourth_odor = 4450/track; //note that the actual track length can be longer than the specified track value
 int first_odor = 3;
 int second_odor = 1;
 int third_odor = 2;
 int fourth_odor = 1;
+
+int envA_odor1 = 3;
+int envA_odor2 = 1;
+int envA_odor3 = 2;
+int envA_odor4 = 1;
+
+int envB_odor1 = 3;
+int envB_odor2 = 1;
+int envB_odor3 = 2;
+int envB_odor4 = 1;
 
 //various time variables
 unsigned long start_time = 0.0;
 unsigned long current_time = 0.0;
 unsigned long water_valve_close_time = 0.0;
 unsigned long reward_window_end = 0.0;
-unsigned long time_at_last_valve_switch = 0.0;
 
 int licks_per_reward = 3;
 unsigned long drop_size = 30.0; //to determine drop size (in ms)
 unsigned long initial_drop = 0.0; //to determine initial drop size (in ms)
 unsigned long reward_window = 5.0; //in seconds
 unsigned long recordingDuration = 50.0; //(recording duration in seconds)
-unsigned long durationWithoutOdor = 25.0; //time at the beginning when no odors are presented
+unsigned long durationInEnvA = 25.0; //time at the beginning when no odors are presented
+unsigned long durationInEnvB = 25.0; //time at the beginning when no odors are presented
 int max_lap_count = 20;
 int portStatus = 0;
 
@@ -134,19 +147,26 @@ void loop() {
       drop_size          =        Serial.parseInt();  
       licks_per_reward   =        Serial.parseInt();    
       initial_drop       =        Serial.parseInt(); 
-      laps_with_initial_drop =    Serial.parseInt();
-      recordingDuration  =        Serial.parseInt();
-      reward_window      =        Serial.parseInt();
       max_lap_count      =        Serial.parseInt();
+      laps_with_initial_drop =    Serial.parseInt();   
+      reward_window      =        Serial.parseInt();      
       track              =        Serial.parseInt();  
-      first_odor         =        Serial.parseInt();
-      second_odor        =        Serial.parseInt();
-      third_odor         =        Serial.parseInt();
-      fourth_odor        =        Serial.parseInt();
-      durationWithoutOdor=        Serial.parseInt();
       
-      recordingDuration = recordingDuration * 1000;  // s to ms
-      durationWithoutOdor = durationWithoutOdor * 1000;
+      durationInEnvA     =        Serial.parseInt();
+      envA_odor1         =        Serial.parseInt();
+      envA_odor2         =        Serial.parseInt();
+      envA_odor3         =        Serial.parseInt();
+      envA_odor4         =        Serial.parseInt();
+      
+      durationInEnvB     =        Serial.parseInt();
+      envB_odor1         =        Serial.parseInt();
+      envB_odor2         =        Serial.parseInt();
+      envB_odor3         =        Serial.parseInt();
+      envB_odor4         =        Serial.parseInt();
+      
+    
+      recordingDuration = (durationInEnvA + durationInEnvB) * 1000;  // s to ms
+      durationInEnvA = durationInEnvA * 1000;
       reward_window = reward_window * 1000.0;   // s to ms
       
       //initialize global variable values for the current trial
@@ -157,6 +177,7 @@ void loop() {
       ttl_count = 0;
       last_ttl = 0;
       distance = 0;
+      last_distance = 0;
       last_rewarded_lap = -1;
       totalDistance = 0;
       lap_count = 0;
@@ -171,7 +192,9 @@ void loop() {
       lick_rate = 0;
       lick_count_at_last_second = 0;
       last_open_valve = 0;
-      laps_without_odor = 0;
+      laps_in_envA = 0;
+      environment = 0;
+      location_at_last_valve_switch = 0;
   
       //now all ready to start the trial
       start_time = millis();
@@ -198,22 +221,31 @@ void loop() {
           digitalWrite(water_valve, LOW);
         }
           
-        lickCounter(); //keep track of licks
-
-        if(durationWithoutOdor > 0 && current_time <= durationWithoutOdor){
-          laps_without_odor = lap_count;
+        if(durationInEnvA > 0 && current_time <= durationInEnvA){
+          laps_in_envA = lap_count;
         }
-        else if(durationWithoutOdor == 0){// if durationWithoutOdor == 0, give odors in all laps
-          laps_without_odor = -1;
+        else if(durationInEnvA == 0){ // if durationInEnvA == 0, EnvB is presented in all laps
+          laps_in_envA = -1;
         }
         
         //to control odor valves    
-        if(lap_count > laps_without_odor){
-          odorControl();
+        if(lap_count == laps_in_envA){
+          first_odor   = envA_odor1;
+          second_odor  = envA_odor2;
+          third_odor   = envA_odor3;
+          fourth_odor  = envA_odor4;
+          environment = 1;
         }
         else{
-          valveSwitch(0);
+          first_odor   = envB_odor1;
+          second_odor  = envB_odor2;
+          third_odor   = envB_odor3;
+          fourth_odor  = envB_odor4;
+          environment = 2;
         }
+        
+        lickCounter(); //keep track of licks        
+        odorControl();
 
         //control water delivery
         if(whether_in_reward_window()) {
@@ -233,8 +265,9 @@ void loop() {
         imaging_trigger = digitalRead(arduino_to_scope); 
         
         //save data every 10ms (rate is higher if there is other activity)
-        if (current_time % 20 <= 1){
+        if (current_time % 100 == 0 || abs(distance - last_distance) > 2){
           printer();
+          last_distance = distance;
         }
       }
     }
@@ -383,104 +416,94 @@ void determineReward(){
 
 
 void odorControl() {
-
-  if ((distance >  0) && (distance <= (begin_first_odor *track))){
-    valveSwitch(0);
-  }
-  else if ((distance > (begin_first_odor * track)) && (distance <= (end_first_odor *track))){
-    valveSwitch(first_odor);
-  }
-  else if ((distance > (end_first_odor * track)) && (distance <= (begin_second_odor * track))){
-    valveSwitch(0);
-  }  
-  else if ((distance > (begin_second_odor * track)) && (distance <= (end_second_odor * track ))){
-    valveSwitch(second_odor);
-  }
-  else if ((distance > (end_second_odor * track )) && (distance <= (begin_third_odor * track))){
-    valveSwitch(0);
-  }
-  else if ((distance > (begin_third_odor * track)) && (distance <= (end_third_odor * track))){
-    valveSwitch(third_odor);
-  }
-  else if ((distance > (end_third_odor * track)) && (distance <= (begin_fourth_odor * track))){
-    valveSwitch(0);
-  }
-  else if ((distance > (begin_fourth_odor * track)) && (distance <= (end_fourth_odor *track))){
-    valveSwitch(fourth_odor);
-  }  
-  else if ((distance > (end_fourth_odor * track)) && (distance <= track)){
-    valveSwitch(0);
-  }
   
-  /////for movement in negative direction/////////
-  else if ((distance >  (0 - track)) && (distance <= ((begin_first_odor - 1)*track))){
-    valveSwitch(0);
+  int location = int(distance);
+  
+  if ((location >=  0) && (location <= (begin_first_odor *track))){
+    valveSwitch(0, location);
   }
-  else if ((distance > ((begin_first_odor - 1)*track)) && (distance <= ((end_first_odor - 1)*track))){
-    valveSwitch(first_odor);
+  else if ((location > (begin_first_odor * track)) && (location <= (end_first_odor *track))){
+    valveSwitch(first_odor, location);
   }
-  else if ((distance > ((end_first_odor - 1)*track)) && (distance <= ((begin_second_odor - 1)*track))){
-    valveSwitch(0);
+  else if ((location > (end_first_odor * track)) && (location <= (begin_second_odor * track))){
+    valveSwitch(0, location);
   }  
-  else if ((distance > ((begin_second_odor - 1)*track)) && (distance <= ((end_second_odor - 1)*track))){
-    valveSwitch(second_odor);
+  else if ((location > (begin_second_odor * track)) && (location <= (end_second_odor * track ))){
+    valveSwitch(second_odor, location);
   }
-  else if ((distance > ((end_second_odor - 1)*track)) && (distance <= ((begin_third_odor - 1)*track))){
-    valveSwitch(0);
+  else if ((location > (end_second_odor * track )) && (location <= (begin_third_odor * track))){
+    valveSwitch(0, location);
   }
-  else if ((distance > ((begin_third_odor - 1)*track)) && (distance <= ((end_third_odor - 1)*track))){
-    valveSwitch(third_odor);
+  else if ((location > (begin_third_odor * track)) && (location <= (end_third_odor * track))){
+    valveSwitch(third_odor, location);
   }
-  else if ((distance > ((end_third_odor - 1)*track)) && (distance <= ((begin_fourth_odor - 1)*track))){
-    valveSwitch(0);
+  else if ((location > (end_third_odor * track)) && (location <= (begin_fourth_odor * track))){
+    valveSwitch(0, location);
   }
-  else if ((distance > ((begin_fourth_odor - 1)*track)) && (distance <= ((end_fourth_odor - 1)*track))){
-    valveSwitch(fourth_odor);
+  else if ((location > (begin_fourth_odor * track)) && (location <= (end_fourth_odor *track))){
+    valveSwitch(fourth_odor, location);
   }  
-  else if ((distance > ((end_fourth_odor - 1)*track)) && (distance <= 0)){
-    valveSwitch(0);
-  }
-  else{
-    valveSwitch(0);
+  else if ((location > (end_fourth_odor * track)) && (location <= track)){
+    valveSwitch(0, location);
+  }  
+  else{    //close all odor valves if motion is in negative direction or if somehow distance is > track
+    valveSwitch(0, location);
   }
 }
 
-void valveSwitch(int valve){
-  if(valve != last_open_valve){  // && current_time - time_at_last_valve_switch > 100){
+void valveSwitch(int valve, int current_location){
+  // noise in the distance measurement can cause rapid switching of valves
+  // to prevent that, we will wait for 10mm change in distance from last valve switch
+  if(valve != last_open_valve && abs(current_location - location_at_last_valve_switch) > 10){
     last_open_valve = valve;
+    location_at_last_valve_switch = current_location;
     valveOperator(valve);
     printer ();
   }
 }
 
 void valveOperator(int valve){
-  time_at_last_valve_switch = current_time; //this may not be necessary
+  //first, close all odor valves
+  digitalWrite(odor_A, LOW);
+  digitalWrite(odor_B, LOW);
+  digitalWrite(odor_C, LOW);
+  digitalWrite(odor_D, LOW);
+  digitalWrite(odor_E, LOW);
+  digitalWrite(odor_F, LOW);
+  //mineral oil is ON when all odors are OFF
+  digitalWrite(mineral_oil, LOW);
   
   if (valve == 1){
-    digitalWrite(odor_A, HIGH);
-    digitalWrite(odor_B, LOW);
-    digitalWrite(odor_C, LOW);
-    digitalWrite(mineral_oil, HIGH);
+    digitalWrite(odor_A, HIGH);      //turn on odor A
+    digitalWrite(mineral_oil, HIGH); // turn off mineral oil
     portStatus = 1;
   }
   else if (valve == 2){
-    digitalWrite(odor_A, LOW);
     digitalWrite(odor_B, HIGH);
-    digitalWrite(odor_C, LOW);
     digitalWrite(mineral_oil, HIGH);
     portStatus = 2;
   }
   else if (valve == 3){
-    digitalWrite(odor_A, LOW);
-    digitalWrite(odor_B, LOW);
     digitalWrite(odor_C, HIGH);
     digitalWrite(mineral_oil, HIGH);
     portStatus = 3;
   }
+  else if (valve == 4){
+    digitalWrite(odor_D, HIGH);
+    digitalWrite(mineral_oil, HIGH);
+    portStatus = 4;
+  }
+  else if (valve == 5){
+    digitalWrite(odor_E, HIGH);
+    digitalWrite(mineral_oil, HIGH);
+    portStatus = 5;
+  }
+  else if (valve == 6){
+    digitalWrite(odor_F, HIGH);
+    digitalWrite(mineral_oil, HIGH);
+    portStatus = 6;
+  }  
   else{
-    digitalWrite(odor_A, LOW);
-    digitalWrite(odor_B, LOW);
-    digitalWrite(odor_C, LOW);
     digitalWrite(mineral_oil, LOW);
     portStatus = 0;
   }    
@@ -507,7 +530,8 @@ void printer (){
             scope_ttl_pulse + comma + 
             ttl_count + comma + 
             lick_rate + comma +
-            lap_count;
+            lap_count + comma +
+            environment;
   Serial.println(dataLog);
 } 
 
