@@ -78,7 +78,6 @@ int initial_drop_status = 0;
 int drop_count = 0;
 int last_drop_count = 0;
 int lick_count_at_reward_location = 0;
-int laps_with_initial_drop = 0;
 int lick_rate = 0;
 int lick_count_at_last_second = 0;
 int last_open_valve = 0;
@@ -127,12 +126,16 @@ unsigned long reward_window_end = 0.0;
 
 int licks_per_reward = 3;
 unsigned long drop_size = 30.0; //to determine drop size (in ms)
-unsigned long initial_drop = 0.0; //to determine initial drop size (in ms)
+long initial_drop = 0.0; //to determine initial drop size (in ms)
+long envA_initial_drop = 0.0; //to determine initial drop size (in ms)
+long envB_initial_drop = 0.0; //to determine initial drop size (in ms)
 unsigned long reward_window = 5.0; //in seconds
 unsigned long recordingDuration = 50.0; //(recording duration in seconds)
 unsigned long durationInEnvA = 25.0; //time at the beginning when no odors are presented
 unsigned long durationInEnvB = 25.0; //time at the beginning when no odors are presented
 int max_lap_count = 20;
+int envA_max_lap_count = 10;
+int envB_max_lap_count = 10;
 int portStatus = 0;
 
 // the loop routine runs over and over again forever:
@@ -145,20 +148,21 @@ void loop() {
     if(cue_to_start_trial == 49){  // 49 is the ASCII code for the digit 1
       //read the parameter values sent from the python GUI
       drop_size          =        Serial.parseInt();  
-      licks_per_reward   =        Serial.parseInt();    
-      initial_drop       =        Serial.parseInt(); 
-      max_lap_count      =        Serial.parseInt();
-      laps_with_initial_drop =    Serial.parseInt();   
+      licks_per_reward   =        Serial.parseInt();             
       reward_window      =        Serial.parseInt();      
       track              =        Serial.parseInt();  
       
       durationInEnvA     =        Serial.parseInt();
+      envA_initial_drop  =        Serial.parseInt();
+      envA_max_lap_count =        Serial.parseInt();
       envA_odor1         =        Serial.parseInt();
       envA_odor2         =        Serial.parseInt();
       envA_odor3         =        Serial.parseInt();
       envA_odor4         =        Serial.parseInt();
       
       durationInEnvB     =        Serial.parseInt();
+      envB_initial_drop  =        Serial.parseInt();
+      envB_max_lap_count =        Serial.parseInt();
       envB_odor1         =        Serial.parseInt();
       envB_odor2         =        Serial.parseInt();
       envB_odor3         =        Serial.parseInt();
@@ -168,6 +172,7 @@ void loop() {
       recordingDuration = (durationInEnvA + durationInEnvB) * 1000;  // s to ms
       durationInEnvA = durationInEnvA * 1000;
       reward_window = reward_window * 1000.0;   // s to ms
+      max_lap_count = envA_max_lap_count + envB_max_lap_count;
       
       //initialize global variable values for the current trial
       lick_count = 0;
@@ -183,6 +188,7 @@ void loop() {
       lap_count = 0;
       last_rewardCount = 0;
       last_lap_total_rewards = 0;
+      initial_drop = 0;
       initial_drop_status = 0;
       drop_count = 0;
       last_drop_count = 0;
@@ -209,7 +215,7 @@ void loop() {
         //when the max number of laps have been reached or when recording duration ends
         //it also makes sure that recording does not end during reward delivery
         //if the mouse stops moving before arriving at the rewarded region, wait an extra 120s before ending the recording session
-        if ((lap_count == max_lap_count)||
+        if ((lap_count >= max_lap_count)||
            (current_time > (recordingDuration + 120000)) ||
            ((reward_window_end > recordingDuration) && (whether_in_reward_window() == false))){
              end_trial();
@@ -221,7 +227,7 @@ void loop() {
           digitalWrite(water_valve, LOW);
         }
           
-        if(durationInEnvA > 0 && current_time <= durationInEnvA){
+        if(durationInEnvA > 0 && current_time <= durationInEnvA && lap_count < envA_max_lap_count){
           laps_in_envA = lap_count;
         }
         else if(durationInEnvA == 0){ // if durationInEnvA == 0, EnvB is presented in all laps
@@ -235,13 +241,21 @@ void loop() {
           third_odor   = envA_odor3;
           fourth_odor  = envA_odor4;
           environment = 1;
+          initial_drop = envA_initial_drop;
+          max_lap_count = max(envA_max_lap_count,1 + laps_in_envA + envB_max_lap_count); //update max possible laps, just in case mouse doesn't run much
         }
-        else{
+        else if (durationInEnvB > 0){
           first_odor   = envB_odor1;
           second_odor  = envB_odor2;
           third_odor   = envB_odor3;
           fourth_odor  = envB_odor4;
           environment = 2;
+          initial_drop = envB_initial_drop;
+        }
+        else{
+          environment = 0;
+          end_trial();
+          break;
         }
         
         lickCounter(); //keep track of licks        
@@ -390,18 +404,18 @@ bool whether_in_reward_window(){
 void determineReward(){
   //for the very first water reward in the current lap
   if(drop_count == last_drop_count && initial_drop > 0){
-    if(lap_count < laps_with_initial_drop){
-       initial_drop_status = 1;
-       drop_count = drop_count + 1;
-       giveReward(initial_drop);
-       initial_drop_status = 0;
-    }
-    else if(last_lap_total_rewards < 1 && lap_count > 0){
-       initial_drop_status = 1;
-       drop_count = drop_count + 1;
-       giveReward(initial_drop);
-       initial_drop_status = 0;
-     }
+     initial_drop_status = 1;
+     drop_count = drop_count + 1;
+     giveReward(initial_drop);
+     initial_drop_status = 0;
+  }
+  
+  //if the mouse didn't get any rewards in the last lap, give an initial drop in this lap
+  if(drop_count == last_drop_count && initial_drop == 0 && last_lap_total_rewards < 1 && lap_count > 0){
+     initial_drop_status = 1;
+     drop_count = drop_count + 1;
+     giveReward(drop_size);
+     initial_drop_status = 0;
   }
  
   //give reward only if the reward window is on AND the mouse is licking at the specified lick_rate
