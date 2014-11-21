@@ -26,7 +26,7 @@ Here are the general steps for running the whole program:
 	   
 2. Then open the GUI window named virtualTrack_GUI.py (runs with 32-bit Python 2.7, not sure about other versions). You might need to install the serial library if your version of python doesn't have it already.
 
-3. In the GUI, set the parameters as needed. Once you hit start, the program will begin to save the collected data in a .csv file in the designated folder (currently set to create a folder named 'Recordings' to save this file).
+3. In the GUI, set the parameters as needed. Once you hit start, the program will begin to save the collected data in a .csv file in the designated folder (currently set to create a folder named 'Recordings' on the Desktop to save this file).
 
 ###############################################################################################################
 
