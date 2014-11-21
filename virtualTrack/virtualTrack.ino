@@ -477,14 +477,14 @@ void valveSwitch(int valve, int current_location){
 }
 
 void valveOperator(int valve){
-  //first, close all odor valves
+  //first, close (LOW==OFF) all odor valves
   digitalWrite(odor_A, LOW);
   digitalWrite(odor_B, LOW);
   digitalWrite(odor_C, LOW);
   digitalWrite(odor_D, LOW);
   digitalWrite(odor_E, LOW);
   digitalWrite(odor_F, LOW);
-  //mineral oil is ON when all odors are OFF
+  //mineral oil is ON (LOW==ON) when all odors are OFF
   digitalWrite(mineral_oil, LOW);
   
   if (valve == 1){
