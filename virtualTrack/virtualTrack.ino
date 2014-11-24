@@ -278,7 +278,7 @@ void loop() {
         //read the status of the imaging trigger signal; it should be ON throughout the recording session
         imaging_trigger = digitalRead(arduino_to_scope); 
         
-        //save data every 10ms (rate is higher if there is other activity)
+        //save data every 100ms (rate is higher if there is other activity)
         if (current_time % 100 == 0 || abs(distance - last_distance) > 2){
           printer();
           last_distance = distance;
@@ -527,25 +527,24 @@ void valveOperator(int valve){
 void printer (){
   //could also display these parameters: lick, reward, change, rotation_step, displacement, reward_window_status
   String comma = ",";
-  String dataLog = "BLANK";
   
-  dataLog = current_time + comma + 
-            portStatus + comma + 
-            lick + comma + 
-            lick_count + comma + 
-            reward + comma + 
-            rewardCount + comma + 
-            int(distance) + comma + 
-            int(totalDistance) + comma + 
-            whether_in_reward_window() + comma + 
-            initial_drop_status + comma + 
-            drop_count + comma + 
-            imaging_trigger + comma + 
-            scope_ttl_pulse + comma + 
-            ttl_count + comma + 
-            lick_rate + comma +
-            lap_count + comma +
-            environment;
+  String dataLog= current_time + comma + 
+                  portStatus + comma + 
+                  lick + comma + 
+                  lick_count + comma + 
+                  reward + comma + 
+                  rewardCount + comma + 
+                  int(distance) + comma + 
+                  int(totalDistance) + comma + 
+                  whether_in_reward_window() + comma + 
+                  initial_drop_status + comma + 
+                  drop_count + comma + 
+                  imaging_trigger + comma + 
+                  scope_ttl_pulse + comma + 
+                  ttl_count + comma + 
+                  lick_rate + comma +
+                  lap_count + comma +
+                  environment;
   Serial.println(dataLog);
 } 
 
