@@ -2,14 +2,9 @@
 #include <Wire.h>
 #include "parameter_definitions.h"
 
-//save data less frequently if nothing is happening
-//add more comments in general
 /*
-  This Arduino sketch is for reading rotary disc and lick port signals and then controlling
-  water and odor delivery according to the signals.
-  
-  Reads rotary disc analog input on pin A10 (the 10-bit values are between 0 and 1023), 
-  converts it into distance in millimeters. Outer circumference of the rotary disc is about 250 millimeters.
+  This Arduino sketch is for reading rotary encoder analog input on pin A10 and lick port signals 
+  and then controlling water and odor delivery according to the signals.
  */
 
 int water_valve = 36; //water valve
@@ -57,9 +52,11 @@ void setup() {
   digitalWrite(arduino_to_scope, HIGH);
   digitalWrite(scope_to_arduino, LOW); 
 
-  prepare_lickport(); 
+  prepare_lickport(); //prepares the lick_port for reading licks
 }
 
+
+//try to use as few global variables as possible
 bool lick = false;
 bool last_lick = false;
 int lick_count = 0;
@@ -91,10 +88,9 @@ float distance = 0.0;
 float last_distance = 0.0;
 float totalDistance = 0.0;
 
-//assuming that the virtual track is 5000 mm long
-//these are the points along the track where the odors turn ON/OFF:
+//these are the points along the track where various odors turn ON/OFF:
 float track = 4500.0; //length (in mm) of the virtual track
-float reward_location = 3750/track; //reward becomes available halfway into the second stretch of odor A
+float reward_location = 3750/track;
 float begin_first_odor = 250/track;
 float end_first_odor = 1000/track;
 float begin_second_odor = 1250/track;
@@ -102,7 +98,7 @@ float end_second_odor = 2000/track;
 float begin_third_odor = 2250/track;
 float end_third_odor = 3000/track;
 float begin_fourth_odor = 3250/track;
-float end_fourth_odor = 4450/track; //note that the actual track length can be longer than the specified track value
+float end_fourth_odor = 4450/track;
 int first_odor = 3;
 int second_odor = 1;
 int third_odor = 2;
@@ -127,12 +123,12 @@ unsigned long reward_window_end = 0.0;
 int licks_per_reward = 3;
 unsigned long drop_size = 30.0; //to determine drop size (in ms)
 long initial_drop = 0.0; //to determine initial drop size (in ms)
-long envA_initial_drop = 0.0; //to determine initial drop size (in ms)
-long envB_initial_drop = 0.0; //to determine initial drop size (in ms)
+long envA_initial_drop = 0.0;
+long envB_initial_drop = 0.0;
 unsigned long reward_window = 5.0; //in seconds
 unsigned long recordingDuration = 50.0; //(recording duration in seconds)
-unsigned long durationInEnvA = 25.0; //time at the beginning when no odors are presented
-unsigned long durationInEnvB = 25.0; //time at the beginning when no odors are presented
+unsigned long durationInEnvA = 25.0;
+unsigned long durationInEnvB = 25.0;
 int max_lap_count = 20;
 int envA_max_lap_count = 10;
 int envB_max_lap_count = 10;
@@ -140,8 +136,6 @@ int portStatus = 0;
 
 // the loop routine runs over and over again forever:
 void loop() {
-  
-  //If using the Arduino Serial Moniotor, press 1 and then Enter to start trial
   if (Serial.available()>0){
     char cue_to_start_trial = Serial.read();
     
