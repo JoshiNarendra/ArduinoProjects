@@ -76,13 +76,6 @@ def timeStamp(fname, fmt='{fname}_%Y-%m-%d-%Hh-%Mm-%Ss'):
 def dir_timeStamp(fmt='%Y_%m_%d'):
     return datetime.datetime.now().strftime(fmt)
 	
-def arduinoCommunication(parameters):
-	#this tells the arduino to start sending data and also provides parameter values
-
-	duelist = arduinoParameters()
-	arduino_parameter_update = '1,'+ duelist[1]+','+ duelist[2]+','+ duelist[3]+','+ duelist[4]+','+ duelist[5]+','+ duelist[6]
-	ser.write(arduino_parameter_update)
-
 def main():
 	
 	fyle = arduinoParameters()
@@ -91,7 +84,7 @@ def main():
 	print 'Name of this file is: ' + filename
 	
 	#create a .csv file inside a folder for each mouse to save incoming data from the arduino
-	dir_path = './Recordings/' + fyle[0] + '/' + fyle[0] + '_' + dir_timeStamp()
+	dir_path = 'C:/Users/axel/Desktop/Recordings/' + fyle[0] + '/' + fyle[0] + '_' + dir_timeStamp()
 	filename = dir_path + '/' + filename
 	if dir_path:
 		if not os.path.isdir(dir_path):
@@ -115,10 +108,14 @@ def main():
 	dataLog.write(header)
 	
 	#this tells the arduino to start sending data and also provides parameter values
-	arduino_parameters = '1,'+ fyle[1]+','+ fyle[2]+','+ fyle[3]+','+ fyle[4]+','+ fyle[5]+','+ fyle[6]
+	arduino_parameters = ('1,'+ 
+						  fyle[1]+','+ 
+						  fyle[2]+','+ 
+						  fyle[3]+','+ 
+						  fyle[4]+','+ 
+						  fyle[5]+','+ 
+						  fyle[6])
 	ser.write(arduino_parameters) 
-	
-	#updateWindow()
 	
 	#now receive and save data, one line per loop
 	while True:
@@ -133,32 +130,10 @@ def main():
 	dataLog.close()
 
 
-##########################################################################
-
-
-# def updateWindow():
-# 	#create a new window
-# 	uWindow = Tkinter.Tk()
-# 	#set the window title
-# 	uWindow.title("Update")
-# 		
-# 	click_button = Tkinter.Button(uWindow, text="Update")
-# 	click_button.grid(row=11,column=1)
-
-
-##########################################################################
-
 #create a button widget
 click_button = Tkinter.Button(window, text="Start", command = main)
 click_button.grid(row=9,column=1)
 
-
-#click_button = Tkinter.Button(window, text="Update", command = arduinoCommunication)
-#click_button.grid(row=11,column=1)
-
-
 # myGUI = guiMaker()
 #draw the window, and start the 'application'
 window.mainloop()
-
-

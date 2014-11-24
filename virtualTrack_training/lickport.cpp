@@ -23,6 +23,7 @@
  by: nj2292@columbia.edu
 */
 
+#define uint8_t byte
 #include <Arduino.h>
 #include "parameter_definitions.h"
 #include <Wire.h>
