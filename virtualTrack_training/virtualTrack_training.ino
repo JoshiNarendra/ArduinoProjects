@@ -297,13 +297,14 @@ void printer (){
                    int(distance) + comma + 
                    int(totalDistance) + comma + 
                    (current_time < reward_window_end) + comma + 
-                   0 + comma + 
-                   lap_count + comma + 
+                   0 + comma + //initial drop
+                   lap_count + comma + //initial drop count
                    imaging_trigger + comma + 
                    scope_ttl_pulse + comma + 
                    ttl_count + comma + 
                    lick_rate + comma + 
-                   lap_count;
+                   lap_count + comma +
+                   1 ;//the environment variable
   Serial.println(dataLog);
 }
   
@@ -318,6 +319,14 @@ void end_trial(){
   digitalWrite(odor_F, LOW);  
   digitalWrite(mineral_oil, LOW);
   digitalWrite(arduino_to_scope, HIGH); //stop imaging
+  
+  //this while loop is to make sure that the ttl pulse for the last frame is not missed
+  while(millis() < current_time + 1000){
+    readTTL();
+    delay(1);
+  }
+  
+  //this print statement tells the python script to stop listening to Arduino
   Serial.println("8128");
 }
 

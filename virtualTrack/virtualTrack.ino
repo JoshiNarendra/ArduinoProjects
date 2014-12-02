@@ -553,6 +553,16 @@ void end_trial(){
   digitalWrite(odor_F, LOW);  
   digitalWrite(mineral_oil, LOW);
   portStatus = 0;
-  digitalWrite(arduino_to_scope, HIGH); //stop imaging
+  
+  //stop imaging
+  digitalWrite(arduino_to_scope, HIGH);
+  
+  //this while loop is to make sure that the ttl pulse for the last frame is not missed
+  while(millis() < current_time + 1000){
+    readTTL();
+    delay(1);
+  }
+  
+  //this print statement tells the python script to stop listening to Arduino
   Serial.println("8128");
 }
