@@ -114,25 +114,58 @@ int envB_odor2 = 1;
 int envB_odor3 = 2;
 int envB_odor4 = 1;
 
+int envC_odor1 = 3;
+int envC_odor2 = 1;
+int envC_odor3 = 2;
+int envC_odor4 = 1;
+
+int envD_odor1 = 3;
+int envD_odor2 = 1;
+int envD_odor3 = 2;
+int envD_odor4 = 1;
+
+int envE_odor1 = 3;
+int envE_odor2 = 1;
+int envE_odor3 = 2;
+int envE_odor4 = 1;
+
+int envF_odor1 = 3;
+int envF_odor2 = 1;
+int envF_odor3 = 2;
+int envF_odor4 = 1;
+
 //various time variables
 unsigned long start_time = 0.0;
 unsigned long current_time = 0.0;
 unsigned long water_valve_close_time = 0.0;
 unsigned long reward_window_end = 0.0;
+unsigned long lap_completion_time = 0.0;
 
 int licks_per_reward = 3;
 unsigned long drop_size = 30.0; //to determine drop size (in ms)
 long initial_drop = 0.0; //to determine initial drop size (in ms)
 long envA_initial_drop = 0.0;
 long envB_initial_drop = 0.0;
+long envC_initial_drop = 0.0;
+long envD_initial_drop = 0.0;
+long envE_initial_drop = 0.0;
+long envF_initial_drop = 0.0;
 unsigned long reward_window = 5.0; //in seconds
 unsigned long recordingDuration = 50.0; //(recording duration in seconds)
 unsigned long durationInEnvA = 25.0;
 unsigned long durationInEnvB = 25.0;
+unsigned long durationInEnvC = 25.0;
+unsigned long durationInEnvD = 25.0;
+unsigned long durationInEnvE = 25.0;
+unsigned long durationInEnvF = 25.0;
+int portStatus = 0;
 int max_lap_count = 20;
 int envA_max_lap_count = 10;
 int envB_max_lap_count = 10;
-int portStatus = 0;
+int envC_max_lap_count = 10;
+int envD_max_lap_count = 10;
+int envE_max_lap_count = 10;
+int envF_max_lap_count = 10;
 
 // the loop routine runs over and over again forever:
 void loop() {
@@ -161,12 +194,49 @@ void loop() {
       envB_odor2         =        Serial.parseInt();
       envB_odor3         =        Serial.parseInt();
       envB_odor4         =        Serial.parseInt();
+
+      durationInEnvC     =        Serial.parseInt();
+      envC_initial_drop  =        Serial.parseInt();
+      envC_max_lap_count =        Serial.parseInt();
+      envC_odor1         =        Serial.parseInt();
+      envC_odor2         =        Serial.parseInt();
+      envC_odor3         =        Serial.parseInt();
+      envC_odor4         =        Serial.parseInt();     
+  
+      durationInEnvD     =        Serial.parseInt();
+      envD_initial_drop  =        Serial.parseInt();
+      envD_max_lap_count =        Serial.parseInt();
+      envD_odor1         =        Serial.parseInt();
+      envD_odor2         =        Serial.parseInt();
+      envD_odor3         =        Serial.parseInt();
+      envD_odor4         =        Serial.parseInt();
+
+      durationInEnvE     =        Serial.parseInt();
+      envE_initial_drop  =        Serial.parseInt();
+      envE_max_lap_count =        Serial.parseInt();
+      envE_odor1         =        Serial.parseInt();
+      envE_odor2         =        Serial.parseInt();
+      envE_odor3         =        Serial.parseInt();
+      envE_odor4         =        Serial.parseInt();
+
+      durationInEnvF     =        Serial.parseInt();
+      envF_initial_drop  =        Serial.parseInt();
+      envF_max_lap_count =        Serial.parseInt();
+      envF_odor1         =        Serial.parseInt();
+      envF_odor2         =        Serial.parseInt();
+      envF_odor3         =        Serial.parseInt();
+      envF_odor4         =        Serial.parseInt();
+
+      durationInEnvA = durationInEnvA * 1000;  // s to ms
+      durationInEnvB = durationInEnvA + durationInEnvB * 1000;  // s to ms
+      durationInEnvC = durationInEnvB + durationInEnvC * 1000;  // s to ms
+      durationInEnvD = durationInEnvC + durationInEnvD * 1000;  // s to ms
+      durationInEnvE = durationInEnvD + durationInEnvE * 1000;  // s to ms
+      durationInEnvF = durationInEnvE + durationInEnvF * 1000;  // s to ms
       
-    
-      recordingDuration = (durationInEnvA + durationInEnvB) * 1000;  // s to ms
-      durationInEnvA = durationInEnvA * 1000;
+      recordingDuration = durationInEnvF;
       reward_window = reward_window * 1000.0;   // s to ms
-      max_lap_count = envA_max_lap_count + envB_max_lap_count;
+      max_lap_count = envA_max_lap_count + envB_max_lap_count + envC_max_lap_count + envD_max_lap_count + envE_max_lap_count + envF_max_lap_count;
       
       //initialize global variable values for the current trial
       lick_count = 0;
@@ -189,6 +259,7 @@ void loop() {
       lick_count_at_reward_location = 0;
       water_valve_close_time = 0;
       reward_window_end = 0;
+      lap_completion_time = 0;
       lick_rate = 0;
       lick_count_at_last_second = 0;
       last_open_valve = 0;
@@ -220,36 +291,60 @@ void loop() {
         if(current_time >= water_valve_close_time){
           digitalWrite(water_valve, LOW);
         }
-          
-        if(durationInEnvA > 0 && current_time <= durationInEnvA && lap_count < envA_max_lap_count){
-          laps_in_envA = lap_count;
-        }
-        else if(durationInEnvA == 0){ // if durationInEnvA == 0, EnvB is presented in all laps
-          laps_in_envA = -1;
-        }
         
-        //to control odor valves    
-        if(lap_count == laps_in_envA){
+        //to determine which environment should be ON  
+        if(lap_completion_time < durationInEnvA && lap_count < envA_max_lap_count){
           first_odor   = envA_odor1;
           second_odor  = envA_odor2;
           third_odor   = envA_odor3;
           fourth_odor  = envA_odor4;
           environment = 1;
           initial_drop = envA_initial_drop;
-          max_lap_count = max(envA_max_lap_count,1 + laps_in_envA + envB_max_lap_count); //update max possible laps, just in case mouse doesn't run much
         }
-        else if (durationInEnvB > 0){
+        else if ((lap_completion_time > durationInEnvA || lap_count >= envA_max_lap_count) && (environment == 1)){
           first_odor   = envB_odor1;
           second_odor  = envB_odor2;
           third_odor   = envB_odor3;
           fourth_odor  = envB_odor4;
           environment = 2;
           initial_drop = envB_initial_drop;
+          envB_max_lap_count = lap_count + envB_max_lap_count;
         }
-        else{
-          environment = 0;
-          end_trial();
-          break;
+        else if ((lap_completion_time > durationInEnvB || lap_count >= envB_max_lap_count) && (environment == 2)){
+          first_odor   = envC_odor1;
+          second_odor  = envC_odor2;
+          third_odor   = envC_odor3;
+          fourth_odor  = envC_odor4;
+          environment = 3;
+          initial_drop = envC_initial_drop;
+          envC_max_lap_count = lap_count + envC_max_lap_count;
+        }
+        else if ((lap_completion_time > durationInEnvC || lap_count >= envC_max_lap_count) && (environment == 3)){
+          first_odor   = envD_odor1;
+          second_odor  = envD_odor2;
+          third_odor   = envD_odor3;
+          fourth_odor  = envD_odor4;
+          environment = 4;
+          initial_drop = envD_initial_drop;
+          envD_max_lap_count = lap_count + envD_max_lap_count;
+        }
+        else if ((lap_completion_time > durationInEnvD || lap_count >= envD_max_lap_count) && (environment == 4)){
+          first_odor   = envE_odor1;
+          second_odor  = envE_odor2;
+          third_odor   = envE_odor3;
+          fourth_odor  = envE_odor4;
+          environment = 5;
+          initial_drop = envE_initial_drop;
+          envE_max_lap_count = lap_count + envE_max_lap_count;
+        }
+        else if ((lap_completion_time > durationInEnvE || lap_count >= envE_max_lap_count) && (environment == 5)){
+          first_odor   = envF_odor1;
+          second_odor  = envF_odor2;
+          third_odor   = envF_odor3;
+          fourth_odor  = envF_odor4;
+          environment = 6;
+          initial_drop = envF_initial_drop;
+          max_lap_count = lap_count + envF_max_lap_count;
         }
         
         lickCounter(); //keep track of licks        
@@ -356,7 +451,8 @@ void readPosition(){
   //or when the mouse runs a full lap of the virtual track
   if((distance >= reward_location * track && whether_in_reward_window() == false) || (distance >= track)){
     distance = 0;
-    lap_count = lap_count + 1; //lap_count increases only if the mouse moves in forward direction   
+    lap_count = lap_count + 1; //lap_count increases only if the mouse moves in forward direction
+    lap_completion_time = current_time;
     last_lap_total_rewards = rewardCount - last_rewardCount;
     last_rewardCount = rewardCount;
     last_drop_count = drop_count;  //to keep track of the number of initial drops delivered up to this point
@@ -405,12 +501,12 @@ void determineReward(){
   }
   
   //if the mouse didn't get any rewards in the last lap, give an initial drop in this lap
-  if(drop_count == last_drop_count && initial_drop == 0 && last_lap_total_rewards < 1 && lap_count > 0){
-     initial_drop_status = 1;
-     drop_count = drop_count + 1;
-     giveReward(drop_size);
-     initial_drop_status = 0;
-  }
+//  if(drop_count == last_drop_count && initial_drop == 0 && last_lap_total_rewards < 1 && lap_count > 0){
+//     initial_drop_status = 1;
+//     drop_count = drop_count + 1;
+//     giveReward(drop_size);
+//     initial_drop_status = 0;
+//  }
  
   //give reward only if the reward window is on AND the mouse is licking at the specified lick_rate
   int lick_count_in_reward_region = lick_count - lick_count_at_reward_location;
