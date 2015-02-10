@@ -147,6 +147,7 @@ int envA_max_lap_count = 10;
 int envB_max_lap_count = 10;
 int envC_max_lap_count = 10;
 int envD_max_lap_count = 10;
+int random_sequence = 0;
 
 // the loop routine runs over and over again forever:
 void loop() {
@@ -188,6 +189,7 @@ void loop() {
       envD_odor2         =        Serial.parseInt();
       envD_odor3         =        Serial.parseInt();
 
+      random_sequence    =        Serial.parseInt();
 
       durationInEnvA = durationInEnvA * 1000;  // s to ms
       durationInEnvB = durationInEnvA + durationInEnvB * 1000;  // s to ms
@@ -538,21 +540,15 @@ void printer (){
   //could also display these parameters: lick, reward, change, rotation_step, displacement, reward_window_status
   String comma = ",";
   
-  String dataLog= current_time + comma + 
+  String dataLog= ttl_count + comma + 
+                  current_time + comma + 
                   portStatus + comma + 
-                  lick + comma + 
                   lick_count + comma + 
-                  reward + comma + 
                   rewardCount + comma + 
+                  drop_count + comma + 
+                  whether_in_reward_window() + comma + 
                   int(distance) + comma + 
                   int(totalDistance) + comma + 
-                  whether_in_reward_window() + comma + 
-                  initial_drop_status + comma + 
-                  drop_count + comma + 
-                  imaging_trigger + comma + 
-                  scope_ttl_pulse + comma + 
-                  ttl_count + comma + 
-                  lick_rate + comma +
                   lap_count + comma +
                   environment;
   Serial.println(dataLog);
