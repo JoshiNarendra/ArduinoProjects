@@ -102,7 +102,11 @@ int first_odor = 1;
 int second_odor = 2;
 int third_odor = 1;
 
-int two_env_random_sequence[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1};
+int two_env_random_sequence_1[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1};
+int two_env_random_sequence_2[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1};
+int three_env_random_sequence[] = {1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3};
+int four_env_random_sequence[]  = {1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4};
+
 
 int envA_odor1 = 1;
 int envA_odor2 = 2;
@@ -112,6 +116,13 @@ int envB_odor1 = 3;
 int envB_odor2 = 2;
 int envB_odor3 = 3;
 
+int envC_odor1 = 1;
+int envC_odor2 = 0;
+int envC_odor3 = 0;
+
+int envD_odor1 = 3;
+int envD_odor2 = 0;
+int envD_odor3 = 0;
 
 //various time variables
 unsigned long start_time = 0.0;
@@ -125,11 +136,16 @@ unsigned long drop_size = 30.0; //to determine drop size (in ms)
 long initial_drop = 0.0; //to determine initial drop size (in ms)
 long envA_initial_drop = 0.0;
 long envB_initial_drop = 0.0;
+long envC_initial_drop = 0.0;
+long envD_initial_drop = 0.0;
+
 
 unsigned long reward_window = 5.0; //in seconds
 unsigned long recordingDuration = 50.0; //(recording duration in seconds)
 unsigned long durationInEnvA = 25.0;
 unsigned long durationInEnvB = 25.0;
+unsigned long durationInEnvC = 25.0;
+unsigned long durationInEnvD = 25.0;
 
 int portStatus = 0;
 int max_lap_count = 20;
@@ -137,6 +153,10 @@ int envA_lap_count = 0;
 int envA_max_lap_count = 10;
 int envB_lap_count = 0;
 int envB_max_lap_count = 10;
+int envC_lap_count = 0;
+int envC_max_lap_count = 10;
+int envD_lap_count = 0;
+int envD_max_lap_count = 10;
 int random_sequence = 0;
 int last_env_switch = 0;
 
@@ -165,11 +185,23 @@ void loop() {
       envB_odor2         =        Serial.parseInt();
       envB_odor3         =        Serial.parseInt();
 
+      envC_initial_drop  =        Serial.parseInt();
+      envC_max_lap_count =        Serial.parseInt();
+      envC_odor1         =        Serial.parseInt();
+      envC_odor2         =        Serial.parseInt();
+      envC_odor3         =        Serial.parseInt();
+
+      envD_initial_drop  =        Serial.parseInt();
+      envD_max_lap_count =        Serial.parseInt();
+      envD_odor1         =        Serial.parseInt();
+      envD_odor2         =        Serial.parseInt();
+      envD_odor3         =        Serial.parseInt();
+
       random_sequence    =        Serial.parseInt();
     
       recordingDuration =  recordingDuration * 1000;;
       reward_window = reward_window * 1000.0;   // s to ms
-      max_lap_count = envA_max_lap_count + envB_max_lap_count;
+      max_lap_count = envA_max_lap_count + envB_max_lap_count + envC_max_lap_count + envD_max_lap_count;
       
       //initialize global variable values for the current trial
       lick_count = 0;
@@ -202,7 +234,9 @@ void loop() {
       last_env_switch = -1;
       envA_lap_count = 0;
       envB_lap_count = 0;
-  
+      envC_lap_count = 0;
+      envD_lap_count = 0;
+      
       //now all ready to start the trial
       start_time = millis();
       lastSensorValue = analogRead(A10); //to make sure that distance measurement starts from 0 mm
@@ -228,13 +262,25 @@ void loop() {
           digitalWrite(water_valve, LOW);
         }
         
-        if(lap_count > last_env_switch && random_sequence > 0){
-          randomizedEnvironmentControl(two_env_random_sequence[lap_count]);
+        if(lap_count > last_env_switch && random_sequence == 1){
+          randomizedEnvironmentControl(two_env_random_sequence_1[lap_count]);
+          last_env_switch = lap_count;
+        }
+        else if(lap_count > last_env_switch && random_sequence == 2){
+          randomizedEnvironmentControl(two_env_random_sequence_2[lap_count]);
+          last_env_switch = lap_count;
+        }
+        else if(lap_count > last_env_switch && random_sequence == 3){
+          randomizedEnvironmentControl(three_env_random_sequence[lap_count]);
+          last_env_switch = lap_count;
+        }
+        else if(lap_count > last_env_switch && random_sequence == 4){
+          randomizedEnvironmentControl(four_env_random_sequence[lap_count]);
           last_env_switch = lap_count;
         }
         else if (random_sequence == 0){
           sequentialEnvironmentControl();
-        }    
+        }   
         
         lickCounter(); //keep track of licks        
         odorControl();
@@ -489,12 +535,30 @@ void sequentialEnvironmentControl(){
     environment = 1;
     initial_drop = envA_initial_drop;
   }
-  else if (lap_count >= envA_max_lap_count){
+  else if (lap_count >= envA_max_lap_count && lap_count < envA_max_lap_count + envB_max_lap_count){
     first_odor   = envB_odor1;
     second_odor  = envB_odor2;
     third_odor   = envB_odor3;
     environment = 2;
     initial_drop = envB_initial_drop;
+  }
+  else if (lap_count >= envA_max_lap_count + envB_max_lap_count && lap_count < envA_max_lap_count + envB_max_lap_count + envC_max_lap_count){
+    first_odor   = envC_odor1;
+    second_odor  = envC_odor2;
+    third_odor   = envC_odor3;
+    environment = 3;
+    initial_drop = envC_initial_drop;
+  }
+  else if (lap_count >= envA_max_lap_count + envB_max_lap_count + envC_max_lap_count){
+    first_odor   = envD_odor1;
+    second_odor  = envD_odor2;
+    third_odor   = envD_odor3;
+    environment = 4;
+    initial_drop = envD_initial_drop;
+  }
+  else{
+    Serial.println(lap_count);
+    Serial.println("Reached maximum number of laps.");
   }
 }
 
@@ -516,12 +580,27 @@ void randomizedEnvironmentControl(int next_env){
     initial_drop = envB_initial_drop;
     envB_lap_count = envB_lap_count + 1;
   }
+  else if(next_env == 3 && envC_lap_count < envC_max_lap_count){
+    first_odor   = envC_odor1;
+    second_odor  = envC_odor2;
+    third_odor   = envC_odor3;
+    environment = 3;
+    initial_drop = envC_initial_drop;
+    envC_lap_count = envC_lap_count + 1;
+  }
+  else if(next_env == 4 && envD_lap_count < envD_max_lap_count){
+    first_odor   = envD_odor1;
+    second_odor  = envD_odor2;
+    third_odor   = envD_odor3;
+    environment = 4;
+    initial_drop = envD_initial_drop;
+    envD_lap_count = envD_lap_count + 1;
+  }
   else{
     Serial.println(next_env);
     Serial.println("Could not randomize");
     sequentialEnvironmentControl();  
   }
-
 }
 
 void printer (){

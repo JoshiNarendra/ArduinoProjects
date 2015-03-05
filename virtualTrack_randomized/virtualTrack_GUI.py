@@ -19,30 +19,30 @@ window.title("Mouse Virtual Reality Experiment")
 
 
 mouse_label = Tkinter.Label(window, text="Mouse ID:").grid(row=0) #create a label widget
-mouse = Tkinter.Entry(window, width=10) #create a text entry widget
+mouse = Tkinter.Entry(window, width=7) #create a text entry widget
 mouse.insert(0,"x") #insert default value for the mouse entry
 
 reward_size_label = Tkinter.Label(window, text="Reward size(ms):").grid(row=1)
-reward_size = Tkinter.Entry(window, width=10)
+reward_size = Tkinter.Entry(window, width=7)
 reward_size.insert(0,"30")
 
 licks_per_reward_label = Tkinter.Label(window, text="Licks/reward:").grid(row=2)
-licks_per_reward = Tkinter.Entry(window, width=10)
+licks_per_reward = Tkinter.Entry(window, width=7)
 licks_per_reward.insert(0,"2")
 
 reward_window_label = Tkinter.Label(window, text="Reward window(s):").grid(row=3)
-reward_window = Tkinter.Entry(window, bg = 'light green', width=10)
+reward_window = Tkinter.Entry(window, bg = 'light green', width=7)
 reward_window.insert(0,"3")
 
 track_label = Tkinter.Label(window, text="Virtual track(mm):").grid(row=4)
-track = Tkinter.Entry(window, bg = 'light blue', width=10)
+track = Tkinter.Entry(window, bg = 'light blue', width=7)
 track.insert(0,"4000")
 
 recording_duration_label = Tkinter.Label(window, text="Recording duration(s):").grid(row=5)
-recording_duration = Tkinter.Entry(window, fg = 'blue', width=10)
+recording_duration = Tkinter.Entry(window, fg = 'blue', width=7)
 recording_duration.insert(0,"1800")
 
-blank_label = Tkinter.Label(window, width=10).grid(row=6)
+blank_label = Tkinter.Label(window, width=7).grid(row=6)
 #############################################################################
 
 envA_initial_drop_label = Tkinter.Label(window, text="Initial drop(ms):").grid(row=7)
@@ -51,7 +51,7 @@ envA_initial_drop.insert(0,"30")
 
 envA_max_lap_count_label = Tkinter.Label(window, text="Max laps:").grid(row=8)
 envA_max_lap_count = Tkinter.Entry(window, width=5)
-envA_max_lap_count.insert(0,"5")
+envA_max_lap_count.insert(0,"1")
 
 envA_odor1_label = Tkinter.Label(window, text="envA_odor1:").grid(row=9)
 envA_odor1 = Tkinter.Entry(window, fg = 'red', width=5)
@@ -74,7 +74,7 @@ envB_initial_drop.insert(0,"30")
 
 envB_max_lap_count_label = Tkinter.Label(window, text="Max laps:").grid(row=15)
 envB_max_lap_count = Tkinter.Entry(window, width=5)
-envB_max_lap_count.insert(0,"5")
+envB_max_lap_count.insert(0,"1")
 
 envB_odor1_label = Tkinter.Label(window, text="envB_odor1:").grid(row=16)
 envB_odor1 = Tkinter.Entry(window, fg = 'red', width=5)
@@ -97,7 +97,55 @@ random_sequence.insert(0,"0")
 # random_sequence = Tkinter.StringVar()
 # Tkinter.Checkbutton(window, text="Randomize env sequence", variable=random_sequence,onvalue = 1, offvalue = 0,indicatoron=1).grid(row=22)
 
-######################################################################
+#############################################################################
+#############################################################################
+
+envC_initial_drop_label = Tkinter.Label(window, text="Initial drop(ms):").grid(row=7,column=2)
+envC_initial_drop = Tkinter.Entry(window, width=5)
+envC_initial_drop.insert(0,"0")
+
+envC_max_lap_count_label = Tkinter.Label(window, text="Max laps:").grid(row=8,column=2)
+envC_max_lap_count = Tkinter.Entry(window, width=5)
+envC_max_lap_count.insert(0,"0")
+
+envC_odor1_label = Tkinter.Label(window, text="envC_odor1:").grid(row=9,column=2)
+envC_odor1 = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor1.insert(0,"0")
+
+envC_odor2_label = Tkinter.Label(window, text="envC_odor2:").grid(row=10,column=2)
+envC_odor2 = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor2.insert(0,"0")
+
+envC_odor3_label = Tkinter.Label(window, text="envC_odor3:").grid(row=11,column=2)
+envC_odor3 = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor3.insert(0,"0")
+
+blank_label = Tkinter.Label(window, width=5).grid(row=13,column=2)
+############################################################################
+
+envD_initial_drop_label = Tkinter.Label(window, text="Initial drop(ms):").grid(row=14,column=2)
+envD_initial_drop = Tkinter.Entry(window, width=5)
+envD_initial_drop.insert(0,"0")
+
+envD_max_lap_count_label = Tkinter.Label(window, text="Max laps:").grid(row=15,column=2)
+envD_max_lap_count = Tkinter.Entry(window, width=5)
+envD_max_lap_count.insert(0,"0")
+
+envD_odor1_label = Tkinter.Label(window, text="envD_odor1:").grid(row=16,column=2)
+envD_odor1 = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor1.insert(0,"0")
+
+envD_odor2_label = Tkinter.Label(window, text="envD_odor2:").grid(row=17,column=2)
+envD_odor2 = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor2.insert(0,"0")
+
+envD_odor3_label = Tkinter.Label(window, text="envD_odor3:").grid(row=18,column=2)
+envD_odor3 = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor3.insert(0,"0")
+
+blank_label = Tkinter.Label(window, width=5).grid(row=19,column=2)
+#############################################################################
+
 
 
 #############################################
@@ -122,7 +170,20 @@ envB_max_lap_count.grid(row=15, column=1)
 envB_odor1.grid(row=16, column=1)
 envB_odor2.grid(row=17, column=1)
 envB_odor3.grid(row=18, column=1)
+
 random_sequence.grid(row=20, column=1)
+
+envC_initial_drop.grid(row=7, column=3)
+envC_max_lap_count.grid(row=8, column=3)
+envC_odor1.grid(row=9, column=3)
+envC_odor2.grid(row=10, column=3)
+envC_odor3.grid(row=11, column=3)
+
+envD_initial_drop.grid(row=14, column=3)
+envD_max_lap_count.grid(row=15, column=3)
+envD_odor1.grid(row=16, column=3)
+envD_odor2.grid(row=17, column=3)
+envD_odor3.grid(row=18, column=3)
 
 ##########################################################################
 def arduinoParameters():
@@ -145,6 +206,18 @@ def arduinoParameters():
 				  envB_odor2.get(),
 				  envB_odor3.get(),
 
+				  envC_initial_drop.get(),
+				  envC_max_lap_count.get(),
+				  envC_odor1.get(),
+				  envC_odor2.get(),
+				  envC_odor3.get(),
+				  
+				  envD_initial_drop.get(),
+				  envD_max_lap_count.get(),
+				  envD_odor1.get(),
+				  envD_odor2.get(),
+				  envD_odor3.get(),				  
+				  		  
 				  random_sequence.get()]			  
 				  
 	return parameters
@@ -194,7 +267,17 @@ def main():
 					',envB_odor1,'+ fyle[13]+
 					',envB_odor2,'+ fyle[14]+
 					',envB_odor3,'+ fyle[15]+
-					',Random_sequence,'+ fyle[16]+
+					',envC_initial_drop,'+ fyle[16]+
+					',envC_max_number_of_laps,'+ fyle[17]+
+					',envC_odor1,'+ fyle[18]+
+					',envC_odor2,'+ fyle[19]+
+					',envC_odor3,'+ fyle[20]+
+					',envD_initial_drop,'+ fyle[21]+
+					',envD_max_number_of_laps,'+ fyle[22]+
+					',envD_odor1,'+ fyle[23]+
+					',envD_odor2,'+ fyle[24]+
+					',envD_odor3,'+ fyle[25]+
+					',Random_sequence,'+ fyle[26]+
 					'\n')	
 	dataLog.write(trial_details)
 	
