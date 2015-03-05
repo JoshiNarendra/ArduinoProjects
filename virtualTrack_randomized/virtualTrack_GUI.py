@@ -88,10 +88,14 @@ envB_odor3_label = Tkinter.Label(window, text="envB_odor3:").grid(row=18)
 envB_odor3 = Tkinter.Entry(window, fg = 'red', width=5)
 envB_odor3.insert(0,"3")
 
-blank_label = Tkinter.Label(window, width=5).grid(row=20)
+blank_label = Tkinter.Label(window, width=5).grid(row=19)
 
-random_sequence = Tkinter.StringVar()
-Tkinter.Checkbutton(window, text="Randomize env sequence", variable=random_sequence,onvalue = 1, offvalue = 0,indicatoron=1).grid(row=22)
+random_sequence_label = Tkinter.Label(window, text="Random odor sequence:").grid(row=20)
+random_sequence = Tkinter.Entry(window, fg = 'blue', width=5)
+random_sequence.insert(0,"0")
+
+# random_sequence = Tkinter.StringVar()
+# Tkinter.Checkbutton(window, text="Randomize env sequence", variable=random_sequence,onvalue = 1, offvalue = 0,indicatoron=1).grid(row=22)
 
 ######################################################################
 
@@ -118,6 +122,7 @@ envB_max_lap_count.grid(row=15, column=1)
 envB_odor1.grid(row=16, column=1)
 envB_odor2.grid(row=17, column=1)
 envB_odor3.grid(row=18, column=1)
+random_sequence.grid(row=20, column=1)
 
 ##########################################################################
 def arduinoParameters():

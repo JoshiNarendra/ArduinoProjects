@@ -200,6 +200,8 @@ void loop() {
       environment = 0;
       location_at_last_valve_switch = 0;
       last_env_switch = -1;
+      envA_lap_count = 0;
+      envB_lap_count = 0;
   
       //now all ready to start the trial
       start_time = millis();
@@ -226,7 +228,7 @@ void loop() {
           digitalWrite(water_valve, LOW);
         }
         
-        if(lap_count > last_env_switch && random_sequence == 1){
+        if(lap_count > last_env_switch && random_sequence > 0){
           randomizedEnvironmentControl(two_env_random_sequence[lap_count]);
           last_env_switch = lap_count;
         }
@@ -470,7 +472,7 @@ void reset_distance(){
     last_lap_total_rewards = rewardCount - last_rewardCount;
     last_rewardCount = rewardCount;
     last_drop_count = drop_count;  //to keep track of the number of initial drops delivered up to this point
-    Serial.println("distance reset");
+    //Serial.println("distance reset");
   }
   
   if (distance*(-1) > track){  //if the mouse is moving in backward direction
@@ -514,6 +516,12 @@ void randomizedEnvironmentControl(int next_env){
     initial_drop = envB_initial_drop;
     envB_lap_count = envB_lap_count + 1;
   }
+  else{
+    Serial.println(next_env);
+    Serial.println("Could not randomize");
+    sequentialEnvironmentControl();  
+  }
+
 }
 
 void printer (){
