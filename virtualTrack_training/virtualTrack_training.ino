@@ -288,22 +288,16 @@ void printer (){
   //could also display these parameters: lick, reward, change, rotation_step, displacement, reward_window_status
   String comma = ",";
   
-  String dataLog = current_time + comma + 
+  String dataLog = ttl_count + comma + 
+                   current_time + comma + 
                    0 + comma + 
-                   lick + comma + 
                    lick_count + comma + 
-                   reward + comma + 
                    rewardCount + comma + 
+                   lap_count + comma + //here, initial drop count is same as lap count
+                   (current_time < reward_window_end) + comma + //reward window
                    int(distance) + comma + 
                    int(totalDistance) + comma + 
-                   (current_time < reward_window_end) + comma + 
-                   0 + comma + //initial drop
                    lap_count + comma + //initial drop count
-                   imaging_trigger + comma + 
-                   scope_ttl_pulse + comma + 
-                   ttl_count + comma + 
-                   lick_rate + comma + 
-                   lap_count + comma +
                    1 ;//the environment variable
   Serial.println(dataLog);
 }
