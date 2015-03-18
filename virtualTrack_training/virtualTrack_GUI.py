@@ -18,19 +18,19 @@ mouse.insert(0,"x") #insert default value for the mouse entry
 
 reward_size_label = Tkinter.Label(window, text="Reward size(ms):").grid(row=1)
 reward_size = Tkinter.Entry(window)
-reward_size.insert(0,"40")
+reward_size.insert(0,"50")
 
 licks_per_reward_label = Tkinter.Label(window, text="Licks per reward:").grid(row=2)
 licks_per_reward = Tkinter.Entry(window)
-licks_per_reward.insert(0,"2")
+licks_per_reward.insert(0,"1")
 
 initial_drop_label = Tkinter.Label(window, text="Initial drop size(ms):").grid(row=3)
 initial_drop = Tkinter.Entry(window)
-initial_drop.insert(0,"40")
+initial_drop.insert(0,"60")
 
 reward_window_label = Tkinter.Label(window, text="Reward window(s):").grid(row=4)
 reward_window = Tkinter.Entry(window)
-reward_window.insert(0,"30")
+reward_window.insert(0,"10")
 
 track_label = Tkinter.Label(window, text="Track length(mm):").grid(row=5)
 track = Tkinter.Entry(window, bg = 'light green')

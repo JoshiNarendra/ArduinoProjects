@@ -241,10 +241,13 @@ void readPosition(){
     lap_count = lap_count + 1; //lap_count increases only if the mouse moves in forward direction
     printer();
   }
-  
-  if (distance*(-1) > track_length){  //if the mouse is moving in backward direction
-    distance = distance + track_length;
-  }
+
+  if (distance < 0){  //if the disstance is negative, reset distance to zero
+    distance = 0;
+  }  
+//  if (distance*(-1) > track_length){  //if the mouse is moving in backward direction
+//    distance = distance + track_length;
+//  }
 
   //update the last sensor value once the cycle is complete
   lastSensorValue = sensorValue;
