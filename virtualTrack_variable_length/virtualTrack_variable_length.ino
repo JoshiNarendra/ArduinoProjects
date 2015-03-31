@@ -88,19 +88,30 @@ float distance = 0.0;
 float last_distance = 0.0;
 float totalDistance = 0.0;
 
-//these are the points along the track where various odors turn ON/OFF:
-float track = 4000.0; //length (in mm) of the virtual track
-float reward_location = 4000/track;
-float begin_first_odor = 1000/track;
-float end_first_odor = 1500/track;
-float begin_second_odor = 2000/track;
-float end_second_odor = 2500/track;
-float begin_third_odor = 3000/track;
-float end_third_odor = 3500/track;
+//these variables are for specifying the points along the track_length where various odors turn ON/OFF:
+float track_odor_region = 400;
+
+float track_length = 4000.0; //length (in mm) of the virtual track_length
+float envA_track_length = 2000.0;
+float envB_track_length = 0.0;
+float envC_track_length = 0.0;
+float envD_track_length = 0.0;
 
 int first_odor = 1;
 int second_odor = 2;
 int third_odor = 1;
+
+float first_odor_location = 500;
+float second_odor_location = 1000;
+float third_odor_location = 1500;
+
+long first_odor_duration = 500; 
+long second_odor_duration = 500; 
+long third_odor_duration = 500;
+
+long first_odor_start_time = 0; 
+long second_odor_start_time = 0; 
+long third_odor_start_time = 0;
 
 int two_env_random_sequence_1[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1};
 int two_env_random_sequence_2[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1};
@@ -111,7 +122,6 @@ int three_env_random_sequence[] = {2,1,3,3,1,2,3,2,1,2,3,1,1,3,2,2,3,1,1,3,2,3,1
 //int four_env_random_sequence[]  = {1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4};
 //int four_env_random_sequence[]  = {3,1,4,2,4,3,2,1,2,1,4,3,4,2,1,3,2,4,1,3,4,1,2,3,4,1,3,2,3,1,2,4,1,2,4,3,1,4,3,2,4,1,2,3,2,3,4,1,3,1,4,2,1,2,4,3,4,3,1,2,2,1,4,3,2,1,4,3,4,1,3,2,4,3,1,2,1,2,3,4,4,1,3,2,2,3,1,4,3,2,1,4,4,2,1,3,3,4,1,2,2,3,1,4,2,4,1,3,4,1,2,3,2,3,1,4,3,1,2,4};
 int four_env_random_sequence[]  = {1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4};
-
 
 
 int envA_odor1 = 1;
@@ -129,6 +139,39 @@ int envC_odor3 = 0;
 int envD_odor1 = 3;
 int envD_odor2 = 0;
 int envD_odor3 = 0;
+
+
+float envA_odor1_location = 500;
+float envA_odor2_location = 1000;
+float envA_odor3_location = 1500;
+
+float envB_odor1_location = 0;
+float envB_odor2_location = 0;
+float envB_odor3_location = 0;
+
+float envC_odor1_location = 0;
+float envC_odor2_location = 0;
+float envC_odor3_location = 0;
+
+float envD_odor1_location = 0;
+float envD_odor2_location = 0;
+float envD_odor3_location = 0;
+
+long envA_odor1_duration = 500;      
+long envA_odor2_duration = 500; 
+long envA_odor3_duration = 500;
+
+long envB_odor1_duration = 0;      
+long envB_odor2_duration = 0; 
+long envB_odor3_duration = 0;
+
+long envC_odor1_duration = 0;      
+long envC_odor2_duration = 0; 
+long envC_odor3_duration = 0;
+
+long envD_odor1_duration = 0;      
+long envD_odor2_duration = 0; 
+long envD_odor3_duration = 0;
 
 //various time variables
 unsigned long start_time = 0.0;
@@ -176,35 +219,62 @@ void loop() {
       drop_size          =        Serial.parseInt();  
       licks_per_reward   =        Serial.parseInt();             
       reward_window      =        Serial.parseInt();      
-      track              =        Serial.parseInt();
       recordingDuration  =        Serial.parseInt();
+      random_sequence    =        Serial.parseInt();
       
       envA_initial_drop  =        Serial.parseInt();
       envA_max_lap_count =        Serial.parseInt();
+      envA_track_length  =        Serial.parseInt();
       envA_odor1         =        Serial.parseInt();
       envA_odor2         =        Serial.parseInt();
-      envA_odor3         =        Serial.parseInt();
+      envA_odor3         =        Serial.parseInt();      
+      envA_odor1_location=        Serial.parseInt();
+      envA_odor2_location=        Serial.parseInt();
+      envA_odor3_location=        Serial.parseInt();
+      envA_odor1_duration=        Serial.parseInt();      
+      envA_odor2_duration=        Serial.parseInt(); 
+      envA_odor3_duration=        Serial.parseInt(); 
       
       envB_initial_drop  =        Serial.parseInt();
       envB_max_lap_count =        Serial.parseInt();
+      envB_track_length  =        Serial.parseInt();
       envB_odor1         =        Serial.parseInt();
       envB_odor2         =        Serial.parseInt();
-      envB_odor3         =        Serial.parseInt();
+      envB_odor3         =        Serial.parseInt();      
+      envB_odor1_location=        Serial.parseInt();
+      envB_odor2_location=        Serial.parseInt();
+      envB_odor3_location=        Serial.parseInt();
+      envB_odor1_duration=        Serial.parseInt();      
+      envB_odor2_duration=        Serial.parseInt(); 
+      envB_odor3_duration=        Serial.parseInt(); 
 
       envC_initial_drop  =        Serial.parseInt();
       envC_max_lap_count =        Serial.parseInt();
+      envC_track_length  =        Serial.parseInt();
       envC_odor1         =        Serial.parseInt();
       envC_odor2         =        Serial.parseInt();
-      envC_odor3         =        Serial.parseInt();
-
+      envC_odor3         =        Serial.parseInt();      
+      envC_odor1_location=        Serial.parseInt();
+      envC_odor2_location=        Serial.parseInt();
+      envC_odor3_location=        Serial.parseInt();
+      envC_odor1_duration=        Serial.parseInt();      
+      envC_odor2_duration=        Serial.parseInt(); 
+      envC_odor3_duration=        Serial.parseInt(); 
+      
       envD_initial_drop  =        Serial.parseInt();
       envD_max_lap_count =        Serial.parseInt();
+      envD_track_length  =        Serial.parseInt();
       envD_odor1         =        Serial.parseInt();
       envD_odor2         =        Serial.parseInt();
-      envD_odor3         =        Serial.parseInt();
+      envD_odor3         =        Serial.parseInt();      
+      envD_odor1_location=        Serial.parseInt();
+      envD_odor2_location=        Serial.parseInt();
+      envD_odor3_location=        Serial.parseInt();
+      envD_odor1_duration=        Serial.parseInt();      
+      envD_odor2_duration=        Serial.parseInt(); 
+      envD_odor3_duration=        Serial.parseInt(); 
 
-      random_sequence    =        Serial.parseInt();
-    
+   
       recordingDuration =  recordingDuration * 1000;;
       reward_window = reward_window * 1000.0;   // s to ms
       max_lap_count = envA_max_lap_count + envB_max_lap_count + envC_max_lap_count + envD_max_lap_count;
@@ -242,6 +312,9 @@ void loop() {
       envB_lap_count = 0;
       envC_lap_count = 0;
       envD_lap_count = 0;
+      first_odor_start_time = 0;
+      second_odor_start_time = 0;
+      third_odor_start_time = 0;
       
       //now all ready to start the trial
       start_time = millis();
@@ -288,7 +361,7 @@ void loop() {
           sequentialEnvironmentControl();
         }   
         
-        lickCounter(); //keep track of licks        
+        lickCounter(); //keep track_length of licks        
         odorControl();
 
         //control water delivery
@@ -320,7 +393,7 @@ void loop() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////detect and keep track of licks//////////////////////////////////////////////
+/////////////////detect and keep track_length of licks//////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 void lickCounter(){
@@ -388,7 +461,7 @@ void readPosition(){
   totalDistance = totalDistance + rotation_step / 1000.0;
   distance = distance + rotation_step;
   
-  //this function checks to see if the distance needs to be reset (because it's become longer than track length)
+  //this function checks to see if the distance needs to be reset (because it's become longer than track_length length)
   reset_distance();
 
   //update the last sensor value once the cycle is complete
@@ -401,8 +474,8 @@ void readPosition(){
 //////and it also has to lick at a given rate to get water drops//////////
 bool whether_in_reward_window(){
   //in the current form, only positive movement leads to a reward
-  //rewarded region of the virtual track starts at (reward_location * track)
-  if ((distance >= reward_location * track) && last_rewarded_lap != lap_count){
+  //rewarded region of the virtual track_length starts at the end of the track_length
+  if ((distance >= track_length) && last_rewarded_lap != lap_count){
    reward_window_end = current_time + reward_window;
    lick_count_at_reward_location = lick_count; 
    last_rewarded_lick = -1;
@@ -414,8 +487,8 @@ bool whether_in_reward_window(){
    reward_window_end = current_time + reward_window;
   }  
   
-  //reward available only if the mouse remains within the the rewarded region of the virtual track
-  return ((current_time < reward_window_end) && (distance >= reward_location * track)); 
+  //reward available only if the mouse remains within the the rewarded region of the virtual track_length
+  return ((current_time < reward_window_end) && (distance >= track_length)); 
 }
 
 void determineReward(){
@@ -441,17 +514,33 @@ void determineReward(){
 void odorControl() {
   
   int location = int(distance);
+
+  if(first_odor_location > 0){
+    if(abs(location - first_odor_location) < 5){
+      first_odor_start_time = current_time;
+    }
+  }
+  if(second_odor_location > 0){
+    if(abs(location - second_odor_location) < 5){
+      second_odor_start_time = current_time;
+    }
+  }
+  if(third_odor_location > 0){
+    if(abs(location - third_odor_location) < 5){
+      third_odor_start_time = current_time;
+    }
+  }
   
-  if ((location > (begin_first_odor * track)) && (location <= (end_first_odor *track))){
+  if ((location > first_odor_location) && (location < first_odor_location + track_odor_region) && (current_time < first_odor_start_time + first_odor_duration)){
     valveSwitch(first_odor, location);
   }  
-  else if ((location > (begin_second_odor * track)) && (location <= (end_second_odor * track ))){
+  else if ((location > second_odor_location) && (location < second_odor_location + track_odor_region) && (current_time < second_odor_start_time + first_odor_duration)){
     valveSwitch(second_odor, location);
   }
-  else if ((location > (begin_third_odor * track)) && (location <= (end_third_odor * track))){
+  else if ((location > third_odor_location) && (location < third_odor_location + track_odor_region) && (current_time < third_odor_start_time + first_odor_duration)){
     valveSwitch(third_odor, location);
   }
-  else{    //close all odor valves if motion is in negative direction or if somehow distance is > track
+  else{    //close all odor valves if motion is in negative direction or if somehow distance is > track_length
     valveSwitch(0, location);
   }
 }
@@ -515,52 +604,92 @@ void valveOperator(int valve){
 }
 
 void reset_distance(){
-  //restart the virtual track when the reward period ends after the mouse gets to the reward location
-  //or when the mouse runs a full lap of the virtual track
-  if((distance >= reward_location * track && whether_in_reward_window() == false) || (distance > 1.25 * track)){
+  //restart the virtual track_length when the reward period ends after the mouse gets to the reward location
+  //or when the mouse runs a full lap of the virtual track_length
+  if((distance >= track_length && whether_in_reward_window() == false) || (distance > 1.25 * track_length)){
     distance = 0;
     lap_count = lap_count + 1; //lap_count increases only if the mouse moves in forward direction
     lap_completion_time = current_time;
     last_lap_total_rewards = rewardCount - last_rewardCount;
     last_rewardCount = rewardCount;
-    last_drop_count = drop_count;  //to keep track of the number of initial drops delivered up to this point
+    last_drop_count = drop_count;  //to keep track_length of the number of initial drops delivered up to this point
     //Serial.println("distance reset");
   }
   
-  if (distance*(-1) > track){  //if the mouse is moving in backward direction
-    distance = distance + track;
+  if (distance*(-1) > track_length){  //if the mouse is moving in backward direction
+    distance = distance + track_length;
   }    
 }
 
 void sequentialEnvironmentControl(){
   //to determine which environment should be ON  
   if(lap_count < envA_max_lap_count){
+    environment = 1;
+    initial_drop = envA_initial_drop;
+    track_length = envA_track_length;
+
     first_odor   = envA_odor1;
     second_odor  = envA_odor2;
     third_odor   = envA_odor3;
-    environment = 1;
-    initial_drop = envA_initial_drop;
+
+    first_odor_location = envA_odor1_location;
+    second_odor_location = envA_odor2_location;
+    third_odor_location = envA_odor3_location;
+
+    first_odor_duration = envA_odor1_duration; 
+    second_odor_duration = envA_odor2_duration; 
+    third_odor_duration = envA_odor3_duration; 
   }
   else if (lap_count >= envA_max_lap_count && lap_count < envA_max_lap_count + envB_max_lap_count){
+    environment = 2;
+    initial_drop = envB_initial_drop;
+    track_length = envB_track_length;
+
     first_odor   = envB_odor1;
     second_odor  = envB_odor2;
     third_odor   = envB_odor3;
-    environment = 2;
-    initial_drop = envB_initial_drop;
+
+    first_odor_location = envB_odor1_location;
+    second_odor_location = envB_odor2_location;
+    third_odor_location = envB_odor3_location;
+
+    first_odor_duration = envB_odor1_duration; 
+    second_odor_duration = envB_odor2_duration; 
+    third_odor_duration = envB_odor3_duration; 
   }
   else if (lap_count >= envA_max_lap_count + envB_max_lap_count && lap_count < envA_max_lap_count + envB_max_lap_count + envC_max_lap_count){
+    environment = 3;
+    initial_drop = envC_initial_drop;
+    track_length = envC_track_length;
+
     first_odor   = envC_odor1;
     second_odor  = envC_odor2;
     third_odor   = envC_odor3;
-    environment = 3;
-    initial_drop = envC_initial_drop;
+
+    first_odor_location = envC_odor1_location;
+    second_odor_location = envC_odor2_location;
+    third_odor_location = envC_odor3_location;
+
+    first_odor_duration = envC_odor1_duration; 
+    second_odor_duration = envC_odor2_duration; 
+    third_odor_duration = envC_odor3_duration; 
   }
   else if (lap_count >= envA_max_lap_count + envB_max_lap_count + envC_max_lap_count){
+    environment = 4;
+    initial_drop = envD_initial_drop;
+    track_length = envD_track_length;
+
     first_odor   = envD_odor1;
     second_odor  = envD_odor2;
     third_odor   = envD_odor3;
-    environment = 4;
-    initial_drop = envD_initial_drop;
+
+    first_odor_location = envD_odor1_location;
+    second_odor_location = envD_odor2_location;
+    third_odor_location = envD_odor3_location;
+
+    first_odor_duration = envD_odor1_duration; 
+    second_odor_duration = envD_odor2_duration; 
+    third_odor_duration = envD_odor3_duration; 
   }
   else{
     Serial.println(lap_count);
@@ -571,36 +700,76 @@ void sequentialEnvironmentControl(){
 void randomizedEnvironmentControl(int next_env){
   //to determine which environment should be ON  
   if(next_env == 1 && envA_lap_count < envA_max_lap_count){
+    environment = 1;
+    initial_drop = envA_initial_drop;
+    track_length = envA_track_length;
+    envA_lap_count = envA_lap_count + 1;
+
     first_odor   = envA_odor1;
     second_odor  = envA_odor2;
     third_odor   = envA_odor3;
-    environment = 1;
-    initial_drop = envA_initial_drop;
-    envA_lap_count = envA_lap_count + 1;
+
+    first_odor_location = envA_odor1_location;
+    second_odor_location = envA_odor2_location;
+    third_odor_location = envA_odor3_location;
+
+    first_odor_duration = envA_odor1_duration; 
+    second_odor_duration = envA_odor2_duration; 
+    third_odor_duration = envA_odor3_duration; 
   }
   else if(next_env == 2 && envB_lap_count < envB_max_lap_count){
+    environment = 2;
+    initial_drop = envB_initial_drop;
+    track_length = envB_track_length;
+    envB_lap_count = envB_lap_count + 1;
+
     first_odor   = envB_odor1;
     second_odor  = envB_odor2;
     third_odor   = envB_odor3;
-    environment = 2;
-    initial_drop = envB_initial_drop;
-    envB_lap_count = envB_lap_count + 1;
+
+    first_odor_location = envB_odor1_location;
+    second_odor_location = envB_odor2_location;
+    third_odor_location = envB_odor3_location;
+
+    first_odor_duration = envB_odor1_duration; 
+    second_odor_duration = envB_odor2_duration; 
+    third_odor_duration = envB_odor3_duration; 
   }
   else if(next_env == 3 && envC_lap_count < envC_max_lap_count){
+    environment = 3;
+    initial_drop = envC_initial_drop;
+    track_length = envC_track_length;
+    envC_lap_count = envC_lap_count + 1;
+
     first_odor   = envC_odor1;
     second_odor  = envC_odor2;
     third_odor   = envC_odor3;
-    environment = 3;
-    initial_drop = envC_initial_drop;
-    envC_lap_count = envC_lap_count + 1;
+
+    first_odor_location = envC_odor1_location;
+    second_odor_location = envC_odor2_location;
+    third_odor_location = envC_odor3_location;
+
+    first_odor_duration = envC_odor1_duration; 
+    second_odor_duration = envC_odor2_duration; 
+    third_odor_duration = envC_odor3_duration; 
   }
   else if(next_env == 4 && envD_lap_count < envD_max_lap_count){
+    environment = 4;
+    initial_drop = envD_initial_drop;
+    track_length = envD_track_length;    
+    envD_lap_count = envD_lap_count + 1;
+
     first_odor   = envD_odor1;
     second_odor  = envD_odor2;
     third_odor   = envD_odor3;
-    environment = 4;
-    initial_drop = envD_initial_drop;
-    envD_lap_count = envD_lap_count + 1;
+
+    first_odor_location = envD_odor1_location;
+    second_odor_location = envD_odor2_location;
+    third_odor_location = envD_odor3_location;
+
+    first_odor_duration = envD_odor1_duration; 
+    second_odor_duration = envD_odor2_duration; 
+    third_odor_duration = envD_odor3_duration; 
   }
   else{
     Serial.println(next_env);
