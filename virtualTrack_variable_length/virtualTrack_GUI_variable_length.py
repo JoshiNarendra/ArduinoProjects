@@ -19,7 +19,7 @@ window.title("Mouse Virtual Reality Experiment")
 
 
 mouse_label = Tkinter.Label(window, text="Mouse ID:")#create a label widget
-mouse = Tkinter.Entry(window, width=7) #create a text entry widget
+mouse = Tkinter.Entry(window, bg = 'light green', width=7) #create a text entry widget
 mouse.insert(0,"x") #insert default value for the mouse entry
 mouse_label.grid(row=0, column=0)
 mouse.grid		(row=0, column=1)
@@ -37,19 +37,19 @@ licks_per_reward_label.grid(row=2, column=0)
 licks_per_reward.grid	   (row=2, column=1)
 
 reward_window_label = Tkinter.Label(window, text="Reward window(s):")
-reward_window = Tkinter.Entry(window, bg = 'light green', width=7)
+reward_window = Tkinter.Entry(window, width=7)
 reward_window.insert(0,"2")
 reward_window_label.grid(row=3, column=0)
 reward_window.grid		(row=3, column=1)
 
 recording_duration_label = Tkinter.Label(window, text="Recording duration(s):")
-recording_duration = Tkinter.Entry(window, fg = 'blue', width=7)
+recording_duration = Tkinter.Entry(window, fg = 'red', width=7)
 recording_duration.insert(0,"2400")
 recording_duration_label.grid(row=4, column=0)
 recording_duration.grid		 (row=4, column=1)
 
 random_sequence_label = Tkinter.Label(window, text="Random odor sequence:")
-random_sequence = Tkinter.Entry(window, fg = 'blue', width=5)
+random_sequence = Tkinter.Entry(window, width=7)
 random_sequence.insert(0,"0")
 random_sequence_label.grid(row=5, column=0)
 random_sequence.grid	  (row=5, column=1)
@@ -60,9 +60,9 @@ random_sequence.grid	  (row=5, column=1)
 
 odor_identity_label = Tkinter.Label(window, text="Odor")
 odor_identity_label.grid(row=6, column=3)
-odor_location_label = Tkinter.Label(window, text="location(mm)")
+odor_location_label = Tkinter.Label(window, text="location(mm)", fg = 'blue')
 odor_location_label.grid(row=6, column=4)
-odor_duration_label = Tkinter.Label(window, text="duration(ms)")
+odor_duration_label = Tkinter.Label(window, text="duration(ms)", fg = 'red' )
 odor_duration_label.grid(row=6, column=5)
 
 #############################################################################
@@ -79,41 +79,41 @@ envA_max_lap_count.insert(0,"1")
 envA_max_lap_count_label.grid(row=8, column=0)
 envA_max_lap_count.grid		 (row=8, column=1)
 
-envA_track_length_label = Tkinter.Label(window, text="Track length(mm):")
-envA_track_length = Tkinter.Entry(window, fg = 'red', width=5)
+envA_track_length_label = Tkinter.Label(window, text="Track length(mm):", fg = 'blue')
+envA_track_length = Tkinter.Entry(window, fg = 'blue', width=5)
 envA_track_length.insert(0,"2000")
 envA_track_length_label.grid (row=9, column=0)
 envA_track_length.grid		 (row=9, column=1)
 
 ###
 envA_odor1_label = Tkinter.Label(window, text="envA_odor1:")
-envA_odor1 = Tkinter.Entry(window, fg = 'red', width=5)
+envA_odor1 = Tkinter.Entry(window, width=5)
 envA_odor1.insert(0,"1")
 envA_odor1_label.grid(row=7, column=2)
 envA_odor1.grid		 (row=7, column=3)
 
 envA_odor2_label = Tkinter.Label(window, text="envA_odor2:")
-envA_odor2 = Tkinter.Entry(window, fg = 'red', width=5)
+envA_odor2 = Tkinter.Entry(window, width=5)
 envA_odor2.insert(0,"2")
 envA_odor2_label.grid(row=8, column=2)
 envA_odor2.grid		 (row=8, column=3)
 
 envA_odor3_label = Tkinter.Label(window, text="envA_odor3:")
-envA_odor3 = Tkinter.Entry(window, fg = 'red', width=5)
+envA_odor3 = Tkinter.Entry(window, width=5)
 envA_odor3.insert(0,"3")
 envA_odor3_label.grid(row=9, column=2)
 envA_odor3.grid		 (row=9, column=3)
 
 ###
-envA_odor1_location = Tkinter.Entry(window, fg = 'red', width=5)
+envA_odor1_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envA_odor1_location.insert(0,"500")
 envA_odor1_location.grid(row=7, column=4)
 
-envA_odor2_location = Tkinter.Entry(window, fg = 'red', width=5)
+envA_odor2_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envA_odor2_location.insert(0,"1000")
 envA_odor2_location.grid(row=8, column=4)
 
-envA_odor3_location = Tkinter.Entry(window, fg = 'red', width=5)
+envA_odor3_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envA_odor3_location.insert(0,"1500")
 envA_odor3_location.grid(row=9, column=4)
 
@@ -145,41 +145,41 @@ envB_max_lap_count.insert(0,"0")
 envB_max_lap_count_label.grid(row=12, column=0)
 envB_max_lap_count.grid		 (row=12, column=1)
 
-envB_track_length_label = Tkinter.Label(window, text="Track length(mm):")
-envB_track_length = Tkinter.Entry(window, fg = 'red', width=5)
+envB_track_length_label = Tkinter.Label(window, text="Track length(mm):", fg = 'blue')
+envB_track_length = Tkinter.Entry(window, fg = 'blue', width=5)
 envB_track_length.insert(0,"0")
 envB_track_length_label.grid (row=13, column=0)
 envB_track_length.grid		 (row=13, column=1)
 
 ###
 envB_odor1_label = Tkinter.Label(window, text="envB_odor1:")
-envB_odor1 = Tkinter.Entry(window, fg = 'red', width=5)
+envB_odor1 = Tkinter.Entry(window, width=5)
 envB_odor1.insert(0,"0")
 envB_odor1_label.grid(row=11, column=2)
 envB_odor1.grid		 (row=11, column=3)
 
 envB_odor2_label = Tkinter.Label(window, text="envB_odor2:")
-envB_odor2 = Tkinter.Entry(window, fg = 'red', width=5)
+envB_odor2 = Tkinter.Entry(window, width=5)
 envB_odor2.insert(0,"0")
 envB_odor2_label.grid(row=12, column=2)
 envB_odor2.grid		 (row=12, column=3)
 
 envB_odor3_label = Tkinter.Label(window, text="envB_odor3:")
-envB_odor3 = Tkinter.Entry(window, fg = 'red', width=5)
+envB_odor3 = Tkinter.Entry(window, width=5)
 envB_odor3.insert(0,"0")
 envB_odor3_label.grid(row=13, column=2)
 envB_odor3.grid		 (row=13, column=3)
 
 ###
-envB_odor1_location = Tkinter.Entry(window, fg = 'red', width=5)
+envB_odor1_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envB_odor1_location.insert(0,"0")
 envB_odor1_location.grid(row=11, column=4)
 
-envB_odor2_location = Tkinter.Entry(window, fg = 'red', width=5)
+envB_odor2_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envB_odor2_location.insert(0,"0")
 envB_odor2_location.grid(row=12, column=4)
 
-envB_odor3_location = Tkinter.Entry(window, fg = 'red', width=5)
+envB_odor3_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envB_odor3_location.insert(0,"0")
 envB_odor3_location.grid(row=13, column=4)
 
@@ -211,41 +211,41 @@ envC_max_lap_count.insert(0,"0")
 envC_max_lap_count_label.grid(row=16, column=0)
 envC_max_lap_count.grid		 (row=16, column=1)
 
-envC_track_length_label = Tkinter.Label(window, text="Track length(mm):")
-envC_track_length = Tkinter.Entry(window, fg = 'red', width=5)
+envC_track_length_label = Tkinter.Label(window, text="Track length(mm):", fg = 'blue')
+envC_track_length = Tkinter.Entry(window, fg = 'blue', width=5)
 envC_track_length.insert(0,"0")
 envC_track_length_label.grid (row=17, column=0)
 envC_track_length.grid		 (row=17, column=1)
 
 ###
 envC_odor1_label = Tkinter.Label(window, text="envC_odor1:")
-envC_odor1 = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor1 = Tkinter.Entry(window, width=5)
 envC_odor1.insert(0,"0")
 envC_odor1_label.grid(row=15, column=2)
 envC_odor1.grid		 (row=15, column=3)
 
 envC_odor2_label = Tkinter.Label(window, text="envC_odor2:")
-envC_odor2 = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor2 = Tkinter.Entry(window, width=5)
 envC_odor2.insert(0,"0")
 envC_odor2_label.grid(row=16, column=2)
 envC_odor2.grid		 (row=16, column=3)
 
 envC_odor3_label = Tkinter.Label(window, text="envC_odor3:")
-envC_odor3 = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor3 = Tkinter.Entry(window, width=5)
 envC_odor3.insert(0,"0")
 envC_odor3_label.grid(row=17, column=2)
 envC_odor3.grid		 (row=17, column=3)
 
 ###
-envC_odor1_location = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor1_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envC_odor1_location.insert(0,"0")
 envC_odor1_location.grid(row=15, column=4)
 
-envC_odor2_location = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor2_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envC_odor2_location.insert(0,"0")
 envC_odor2_location.grid(row=16, column=4)
 
-envC_odor3_location = Tkinter.Entry(window, fg = 'red', width=5)
+envC_odor3_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envC_odor3_location.insert(0,"0")
 envC_odor3_location.grid(row=17, column=4)
 
@@ -278,41 +278,41 @@ envD_max_lap_count.insert(0,"0")
 envD_max_lap_count_label.grid(row=20, column=0)
 envD_max_lap_count.grid		 (row=20, column=1)
 
-envD_track_length_label = Tkinter.Label(window, text="Track length(mm):")
-envD_track_length = Tkinter.Entry(window, fg = 'red', width=5)
+envD_track_length_label = Tkinter.Label(window, text="Track length(mm):", fg = 'blue')
+envD_track_length = Tkinter.Entry(window, fg = 'blue', width=5)
 envD_track_length.insert(0,"0")
 envD_track_length_label.grid (row=21, column=0)
 envD_track_length.grid		 (row=21, column=1)
 
 ###
 envD_odor1_label = Tkinter.Label(window, text="envD_odor1:")
-envD_odor1 = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor1 = Tkinter.Entry(window, width=5)
 envD_odor1.insert(0,"0")
 envD_odor1_label.grid(row=19, column=2)
 envD_odor1.grid		 (row=19, column=3)
 
 envD_odor2_label = Tkinter.Label(window, text="envD_odor2:")
-envD_odor2 = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor2 = Tkinter.Entry(window, width=5)
 envD_odor2.insert(0,"0")
 envD_odor2_label.grid(row=20, column=2)
 envD_odor2.grid		 (row=20, column=3)
 
 envD_odor3_label = Tkinter.Label(window, text="envD_odor3:")
-envD_odor3 = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor3 = Tkinter.Entry(window, width=5)
 envD_odor3.insert(0,"0")
 envD_odor3_label.grid(row=21, column=2)
 envD_odor3.grid		 (row=21, column=3)
 
 ###
-envD_odor1_location = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor1_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envD_odor1_location.insert(0,"0")
 envD_odor1_location.grid(row=19, column=4)
 
-envD_odor2_location = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor2_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envD_odor2_location.insert(0,"0")
 envD_odor2_location.grid(row=20, column=4)
 
-envD_odor3_location = Tkinter.Entry(window, fg = 'red', width=5)
+envD_odor3_location = Tkinter.Entry(window, fg = 'blue', width=5)
 envD_odor3_location.insert(0,"0")
 envD_odor3_location.grid(row=21, column=4)
 

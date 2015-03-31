@@ -113,15 +113,15 @@ long first_odor_start_time = 0;
 long second_odor_start_time = 0; 
 long third_odor_start_time = 0;
 
-int two_env_random_sequence_1[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1};
-int two_env_random_sequence_2[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1};
+int two_env_random_sequence_1[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1};
+int two_env_random_sequence_2[] = {2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,2,1,2,1,2,1,2,1,1,2,2,1,2,2,1,2,1,1,2,1,2,1,2,2,1,2,1,1,1,2,2,1,1,2,2,1,2,1,2,1,1,2,2,1,2,2,1,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,1};
 
 //int three_env_random_sequence[] = {1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3};
-int three_env_random_sequence[] = {2,1,3,3,1,2,3,2,1,2,3,1,1,3,2,2,3,1,1,3,2,3,1,2,2,1,3,2,3,1,2,1,3,2,1,3,2,3,1,1,3,2,3,1,2,3,2,1,2,3,1,3,1,2,1,3,2,1,3,2,3,1,2,3,2,1,3,1,2,3,1,2,1,2,3,2,1,3,1,2,3,3,2,1,2,1,3,2,1,3,3,2,1,3,1,2,3,1,2,2,3,1,2,1,3,2,1,3,3,2,1,2,1,3,3,1,2,2,1,3};
+int three_env_random_sequence[] = {2,1,3,3,1,2,3,2,1,2,3,1,1,3,2,2,3,1,1,3,2,3,1,2,2,1,3,2,3,1,2,1,3,2,1,3,2,3,1,1,3,2,3,1,2,3,2,1,2,3,1,3,1,2,1,3,2,1,3,2,3,1,2,3,2,1,3,1,2,3,1,2,1,2,3,2,1,3,1,2,3,3,2,1,2,1,3,2,1,3,3,2,1,3,1,2,3,1,2,2,3,1,2,1,3,2,1,3,3,2,1,2,1,3,3,1,2,2,1,3,2,1,3,3,1,2,3,2,1,2,3,1,1,3,2,2,3,1,1,3,2,3,1,2,2,1,3,2,3,1,2,1,3,2,1,3,2,3,1,1,3,2,3,1,2,3,2,1,2,3,1,3,1,2,1,3,2,1,3,2,3,1,2,3,2,1,3,1,2,3,1,2,1,2,3,2,1,3,1,2,3,3,2,1,2,1,3,2,1,3,3,2,1,3,1,2,3,1,2,2,3,1,2,1,3,2,1,3,3,2,1,2,1,3,3,1,2,2,1,3};
 
 //int four_env_random_sequence[]  = {1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4};
 //int four_env_random_sequence[]  = {3,1,4,2,4,3,2,1,2,1,4,3,4,2,1,3,2,4,1,3,4,1,2,3,4,1,3,2,3,1,2,4,1,2,4,3,1,4,3,2,4,1,2,3,2,3,4,1,3,1,4,2,1,2,4,3,4,3,1,2,2,1,4,3,2,1,4,3,4,1,3,2,4,3,1,2,1,2,3,4,4,1,3,2,2,3,1,4,3,2,1,4,4,2,1,3,3,4,1,2,2,3,1,4,2,4,1,3,4,1,2,3,2,3,1,4,3,1,2,4};
-int four_env_random_sequence[]  = {1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4};
+int four_env_random_sequence[]  = {1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4,3,4,1,2,3,4,1,2,1,2,3,4,3,4,1,2,1,2,3,4};
 
 
 int envA_odor1 = 1;
@@ -178,7 +178,7 @@ unsigned long start_time = 0.0;
 unsigned long current_time = 0.0;
 unsigned long water_valve_close_time = 0.0;
 unsigned long reward_window_end = 0.0;
-unsigned long lap_completion_time = 0.0;
+unsigned long time_at_last_lap_completion = 0.0;
 
 int licks_per_reward = 3;
 unsigned long drop_size = 30.0; //to determine drop size (in ms)
@@ -300,7 +300,7 @@ void loop() {
       lick_count_at_reward_location = 0;
       water_valve_close_time = 0;
       reward_window_end = 0;
-      lap_completion_time = 0;
+      time_at_last_lap_completion = 0;
       lick_rate = 0;
       lick_count_at_last_second = 0;
       last_open_valve = 0;
@@ -515,18 +515,18 @@ void odorControl() {
   
   int location = int(distance);
 
-  if(first_odor_location > 0){
-    if(abs(location - first_odor_location) < 5){
+  if(first_odor_location > 0 && first_odor_start_time <= time_at_last_lap_completion){
+    if(location > first_odor_location){
       first_odor_start_time = current_time;
     }
   }
-  if(second_odor_location > 0){
-    if(abs(location - second_odor_location) < 5){
+  if(second_odor_location > 0 && second_odor_start_time <= time_at_last_lap_completion){
+    if(location > second_odor_location){
       second_odor_start_time = current_time;
     }
   }
-  if(third_odor_location > 0){
-    if(abs(location - third_odor_location) < 5){
+  if(third_odor_location > 0 && third_odor_start_time <= time_at_last_lap_completion){
+    if(location > third_odor_location){
       third_odor_start_time = current_time;
     }
   }
@@ -534,10 +534,10 @@ void odorControl() {
   if ((location > first_odor_location) && (location < first_odor_location + track_odor_region) && (current_time < first_odor_start_time + first_odor_duration)){
     valveSwitch(first_odor, location);
   }  
-  else if ((location > second_odor_location) && (location < second_odor_location + track_odor_region) && (current_time < second_odor_start_time + first_odor_duration)){
+  else if ((location > second_odor_location) && (location < second_odor_location + track_odor_region) && (current_time < second_odor_start_time + second_odor_duration)){
     valveSwitch(second_odor, location);
   }
-  else if ((location > third_odor_location) && (location < third_odor_location + track_odor_region) && (current_time < third_odor_start_time + first_odor_duration)){
+  else if ((location > third_odor_location) && (location < third_odor_location + track_odor_region) && (current_time < third_odor_start_time + third_odor_duration)){
     valveSwitch(third_odor, location);
   }
   else{    //close all odor valves if motion is in negative direction or if somehow distance is > track_length
@@ -547,8 +547,8 @@ void odorControl() {
 
 void valveSwitch(int valve, int current_location){
   // noise in the distance measurement can cause rapid switching of valves
-  // to prevent that, we will wait for 10mm change in distance from last valve switch
-  if(valve != last_open_valve && abs(current_location - location_at_last_valve_switch) > 10){
+  // to prevent that, we will wait for 1mm change in distance from last valve switch
+  if(valve != last_open_valve && abs(current_location - location_at_last_valve_switch) > 1){
     last_open_valve = valve;
     location_at_last_valve_switch = current_location;
     valveOperator(valve);
@@ -609,7 +609,7 @@ void reset_distance(){
   if((distance >= track_length && whether_in_reward_window() == false) || (distance > 1.25 * track_length)){
     distance = 0;
     lap_count = lap_count + 1; //lap_count increases only if the mouse moves in forward direction
-    lap_completion_time = current_time;
+    time_at_last_lap_completion = current_time;
     last_lap_total_rewards = rewardCount - last_rewardCount;
     last_rewardCount = rewardCount;
     last_drop_count = drop_count;  //to keep track_length of the number of initial drops delivered up to this point
