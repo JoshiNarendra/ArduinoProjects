@@ -9,7 +9,7 @@ ser = serial.Serial(10,115200) #ArduinoMega is on COM11 port
 #create a new window
 window = Tkinter.Tk()
 #set the window title
-window.title("Rotary Disc Experiment")
+window.title("Training a mouse to run on a ball")
 
 
 mouse_label = Tkinter.Label(window, text="Mouse").grid(row=0) #create a label widget
@@ -70,7 +70,7 @@ def num(s):
         return -1
 	return
 	
-def timeStamp(fname, fmt='{fname}_%Y-%m-%d-%Hh-%Mm-%Ss'):
+def timeStamp(fname, fmt='{fname}_%Y_%m_%d_%Hh_%Mm_%Ss'):
     return datetime.datetime.now().strftime(fmt).format(fname=fname)
 
 def dir_timeStamp(fmt='%Y_%m_%d'):

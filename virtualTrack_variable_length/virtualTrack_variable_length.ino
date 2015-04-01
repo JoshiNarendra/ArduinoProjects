@@ -531,13 +531,14 @@ void odorControl() {
     }
   }
   
-  if ((location > first_odor_location) && (location < first_odor_location + track_odor_region) && (current_time < first_odor_start_time + first_odor_duration)){
+  //if ((location > first_odor_location) && (location < first_odor_location + track_odor_region) && (current_time < first_odor_start_time + first_odor_duration)){
+  if ((location > first_odor_location) && (current_time < first_odor_start_time + first_odor_duration)){
     valveSwitch(first_odor, location);
   }  
-  else if ((location > second_odor_location) && (location < second_odor_location + track_odor_region) && (current_time < second_odor_start_time + second_odor_duration)){
+  else if ((location > second_odor_location) && (current_time < second_odor_start_time + second_odor_duration)){
     valveSwitch(second_odor, location);
   }
-  else if ((location > third_odor_location) && (location < third_odor_location + track_odor_region) && (current_time < third_odor_start_time + third_odor_duration)){
+  else if ((location > third_odor_location) && (current_time < third_odor_start_time + third_odor_duration)){
     valveSwitch(third_odor, location);
   }
   else{    //close all odor valves if motion is in negative direction or if somehow distance is > track_length
