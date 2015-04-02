@@ -255,7 +255,7 @@ def main():
 	
 	fyle = arduinoParameters()
 	filename = timeStamp(fyle[0])
-	filename = filename + ".csv"
+	filename = filename + "_behavior.csv"
 	print 'Name of this file is: ' + filename
 	
 	#create a .csv file inside a folder for each mouse to save incoming data from the arduino

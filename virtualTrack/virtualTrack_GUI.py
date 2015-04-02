@@ -342,7 +342,7 @@ def num(s):
         return -1
 	return
 	
-def timeStamp(fname, fmt='{fname}_%Y-%m-%d-%Hh-%Mm-%Ss'):
+def timeStamp(fname, fmt='{fname}_%Y_%m_%d_%Hh_%Mm_%Ss'):
     return datetime.datetime.now().strftime(fmt).format(fname=fname)
 
 def dir_timeStamp(fmt='%Y_%m_%d'):
@@ -352,7 +352,7 @@ def main():
 	
 	fyle = arduinoParameters()
 	filename = timeStamp(fyle[0])
-	filename = filename + ".csv"
+	filename = filename + "_behavior.csv"
 	print 'Name of this file is: ' + filename
 	
 	#create a .csv file inside a folder for each mouse to save incoming data from the arduino
