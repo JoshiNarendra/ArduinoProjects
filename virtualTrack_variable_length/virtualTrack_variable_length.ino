@@ -617,8 +617,8 @@ void reset_distance(){
     //Serial.println("distance reset");
   }
   
-  if (distance*(-1) > track_length){  //if the mouse is moving in backward direction
-    distance = distance + track_length;
+  if (distance < 0){  //if the mouse is moving in backward direction, reset distance to zero
+    distance = 0;
   }    
 }
 

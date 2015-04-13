@@ -32,7 +32,7 @@ reward_size.grid	  (row=1, column=1)
 
 licks_per_reward_label = Tkinter.Label(window, text="Licks/reward:")
 licks_per_reward = Tkinter.Entry(window, width=7)
-licks_per_reward.insert(0,"2")
+licks_per_reward.insert(0,"3")
 licks_per_reward_label.grid(row=2, column=0)
 licks_per_reward.grid	   (row=2, column=1)
 
@@ -44,7 +44,7 @@ reward_window.grid		(row=3, column=1)
 
 recording_duration_label = Tkinter.Label(window, text="Recording duration(s):")
 recording_duration = Tkinter.Entry(window, fg = 'red', width=7)
-recording_duration.insert(0,"2400")
+recording_duration.insert(0,"1800")
 recording_duration_label.grid(row=4, column=0)
 recording_duration.grid		 (row=4, column=1)
 
