@@ -3,7 +3,7 @@ import serial
 import time
 import datetime
 import os, errno
-ser = serial.Serial(10,115200) #ArduinoMega is on COM11 port
+ser = serial.Serial(11,115200) #ArduinoMega is on COM11 port
 #ser = serial.Serial('/dev/ttyS4',115200)
 
 #create a new window
@@ -18,15 +18,15 @@ mouse.insert(0,"x") #insert default value for the mouse entry
 
 reward_size_label = Tkinter.Label(window, text="Reward size(ms):").grid(row=1)
 reward_size = Tkinter.Entry(window)
-reward_size.insert(0,"50")
+reward_size.insert(0,"30")
 
 licks_per_reward_label = Tkinter.Label(window, text="Licks per reward:").grid(row=2)
 licks_per_reward = Tkinter.Entry(window)
-licks_per_reward.insert(0,"1")
+licks_per_reward.insert(0,"2")
 
 initial_drop_label = Tkinter.Label(window, text="Initial drop size(ms):").grid(row=3)
 initial_drop = Tkinter.Entry(window)
-initial_drop.insert(0,"60")
+initial_drop.insert(0,"30")
 
 reward_window_label = Tkinter.Label(window, text="Reward window(s):").grid(row=4)
 reward_window = Tkinter.Entry(window)
@@ -34,11 +34,11 @@ reward_window.insert(0,"10")
 
 track_label = Tkinter.Label(window, text="Track length(mm):").grid(row=5)
 track = Tkinter.Entry(window, bg = 'light green')
-track.insert(0,"100")
+track.insert(0,"1000")
 
 recording_duration_label = Tkinter.Label(window, text="Recording duration(s):").grid(row=6)
 recording_duration = Tkinter.Entry(window)
-recording_duration.insert(0,"120")
+recording_duration.insert(0,"60")
 
 #arrange the entry fields in a grid layout
 mouse.grid(row=0, column=1)

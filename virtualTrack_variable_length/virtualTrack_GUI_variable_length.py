@@ -19,37 +19,37 @@ window.title("Mouse Virtual Reality Experiment")
 
 
 mouse_label = Tkinter.Label(window, text="Mouse ID:")#create a label widget
-mouse = Tkinter.Entry(window, bg = 'light green', width=7) #create a text entry widget
+mouse = Tkinter.Entry(window, bg = 'light green', width=10) #create a text entry widget
 mouse.insert(0,"x") #insert default value for the mouse entry
 mouse_label.grid(row=0, column=0)
 mouse.grid		(row=0, column=1)
 
 reward_size_label = Tkinter.Label(window, text="Reward size(ms):")
-reward_size = Tkinter.Entry(window, width=7)
+reward_size = Tkinter.Entry(window, width=10)
 reward_size.insert(0,"30")
 reward_size_label.grid(row=1, column=0)
 reward_size.grid	  (row=1, column=1)
 
 licks_per_reward_label = Tkinter.Label(window, text="Licks/reward:")
-licks_per_reward = Tkinter.Entry(window, width=7)
-licks_per_reward.insert(0,"3")
+licks_per_reward = Tkinter.Entry(window, width=10)
+licks_per_reward.insert(0,"2")
 licks_per_reward_label.grid(row=2, column=0)
 licks_per_reward.grid	   (row=2, column=1)
 
 reward_window_label = Tkinter.Label(window, text="Reward window(s):")
-reward_window = Tkinter.Entry(window, width=7)
+reward_window = Tkinter.Entry(window, width=10)
 reward_window.insert(0,"2")
 reward_window_label.grid(row=3, column=0)
 reward_window.grid		(row=3, column=1)
 
 recording_duration_label = Tkinter.Label(window, text="Recording duration(s):")
-recording_duration = Tkinter.Entry(window, fg = 'red', width=7)
+recording_duration = Tkinter.Entry(window, fg = 'red', width=10)
 recording_duration.insert(0,"1800")
 recording_duration_label.grid(row=4, column=0)
 recording_duration.grid		 (row=4, column=1)
 
 random_sequence_label = Tkinter.Label(window, text="Random odor sequence:")
-random_sequence = Tkinter.Entry(window, width=7)
+random_sequence = Tkinter.Entry(window, width=10)
 random_sequence.insert(0,"0")
 random_sequence_label.grid(row=5, column=0)
 random_sequence.grid	  (row=5, column=1)
